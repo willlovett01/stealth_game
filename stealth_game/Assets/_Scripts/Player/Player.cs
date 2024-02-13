@@ -11,13 +11,14 @@ public class Player : MonoBehaviour {
     public Transform groundObject;
     public Camera gameCamera;
     public LayerMask layerMask;
+    public GameObject map;
 
     Vector3 requestedPosition;
     Vector3 velocity;
     float targetDirection;
     
 
-    new Rigidbody playerRigidBody;
+    Rigidbody playerRigidBody;
     
     
     
@@ -45,6 +46,8 @@ public class Player : MonoBehaviour {
                 requestedPosition = new Vector3(Mathf.Round(requestedPosition.x), transform.position.y, Mathf.Round(requestedPosition.z));
                 print(requestedPosition);
                 targetDirection = Mathf.Atan2(requestedPosition.x, requestedPosition.z) * Mathf.Rad2Deg;
+
+
                
                 
             }
