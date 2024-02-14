@@ -1,51 +1,36 @@
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class Player : MonoBehaviour {
+public class UnitSpawn : MonoBehaviour {
 
-    public float speed;
-
-    public Camera gameCamera;
-    public LayerMask layerMask;
+    float speed = 5f;
     public GameObject pathFinder;
     public GameObject map;
 
-    TilePiece requestedTile;
     TilePiece currentTile;
-
+    TilePiece requestedTile;
+    TilePiece swapTile;
 
     Vector3[] path;
     int targetIndex;
-    
-    
+
+
+
     // Start is called before the first frame update
     void Start() {
         currentTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
+        requestedTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
+
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
-        
+        PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
 
     }
 
-    // Update is called once per frame
-    void Update() {
 
-        // get mouse point on ground
-        if (Input.GetMouseButtonDown(1)) {
-            Ray ray = gameCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
 
-            if (Physics.Raycast(ray, out hitInfo, layerMask)) {
-                requestedTile = hitInfo.collider.GetComponent<TilePiece>();
-                PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
-                currentTile = requestedTile;
-
-            }
-        }
-   
-    }
 
 
     public void onPathFound(Vector3[] newPath, bool pathSuccessfull) {
@@ -64,9 +49,15 @@ public class Player : MonoBehaviour {
             if (transform.position == currentWaypoint) {
                 targetIndex++;
                 if (targetIndex >= path.Length) {
-                    yield break;
+                    swapTile = currentTile;
+                    currentTile = requestedTile;
+                    requestedTile = swapTile;
+                    PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
+
+
+
                 }
-                currentWaypoint = new Vector3(path[targetIndex].x,transform.position.y, path[targetIndex].z);
+                currentWaypoint = new Vector3(path[targetIndex].x, transform.position.y, path[targetIndex].z);
             }
 
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed * Time.deltaTime);
@@ -77,12 +68,12 @@ public class Player : MonoBehaviour {
     }
 
     void OnDrawGizmos() {
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.yellow;
         Gizmos.DrawRay(transform.position, transform.forward * 3);
 
-        if(path != null) {
+        if (path != null) {
             for (int i = targetIndex; i < path.Length; i++) {
-                Gizmos.color = Color.black;
+                Gizmos.color = Color.red;
                 Gizmos.DrawCube(path[i], Vector3.one * 0.1f);
 
                 if (i == targetIndex) {
@@ -94,24 +85,5 @@ public class Player : MonoBehaviour {
             }
         }
     }
+}
 
-} 
-
-
-    
-    
-    
-
-
-
-   
-    
-
-
-
-               
-                
-
-
-
-                

@@ -2,75 +2,115 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
+using System;
 
 
 
 
 public class PathFinding : MonoBehaviour {
 
-    public GameObject map;
-    public GameObject start, end;
+    PathRequestManager requestManager;
 
-
-    void Update() {
-        FindPath(start.GetComponent<TilePiece>(), end.GetComponent<TilePiece>());
+    void Awake() {
+        requestManager = GetComponent<PathRequestManager>();
     }
 
-    public void FindPath(TilePiece startTile, TilePiece targetTile) {
+    public void StartFindPath(TilePiece startPos, TilePiece endPos) {
+        StartCoroutine(FindPath(startPos, endPos));
+    }
 
-        List<TilePiece> openSet = new List<TilePiece>();
-        HashSet<TilePiece> closedSet = new HashSet<TilePiece>();
-        openSet.Add(startTile);
 
-        while (openSet.Count > 0) {
-            TilePiece currentTile = openSet[0];
-            for (int i = 1; i < openSet.Count; i++) {
-                if (openSet[i].fCost() < currentTile.fCost() ||
-                    openSet[i].fCost() == currentTile.fCost() && 
-                    openSet[i].hCost < currentTile.hCost) {
+    IEnumerator FindPath(TilePiece startTile, TilePiece targetTile) {
+
+        Vector3[] waypoints = new Vector3[0];
+        bool pathSuccess = false;
+
+        if (startTile.clickable && targetTile.clickable) {
+            List<TilePiece> openSet = new List<TilePiece>();
+            HashSet<TilePiece> closedSet = new HashSet<TilePiece>();
+            openSet.Add(startTile);
+
+            while (openSet.Count > 0) {
+                TilePiece currentTile = openSet[0];
+                for (int i = 1; i < openSet.Count; i++) {
+                    if (openSet[i].fCost() < currentTile.fCost() ||
+                        openSet[i].fCost() == currentTile.fCost() &&
+                        openSet[i].hCost < currentTile.hCost) {
                         currentTile = openSet[i];
+                    }
                 }
-            }
-             openSet.Remove(currentTile);
-             closedSet.Add(currentTile);
+                openSet.Remove(currentTile);
+                closedSet.Add(currentTile);
 
-            if (currentTile == targetTile) {
-                RetracePath(startTile, targetTile);
-                return;
-            }
-
-            foreach(TilePiece neighbour in currentTile.neighbours) {
-                if (closedSet.Contains(neighbour)) {
-                    continue;
+                if (currentTile == targetTile) {
+                    pathSuccess = true;
+                    break;
                 }
 
-                int newMovementCostToNeigbour = currentTile.gCost + getDistance(currentTile, neighbour);
-                if (newMovementCostToNeigbour < neighbour.gCost || !openSet.Contains(neighbour)) { 
-                    neighbour.gCost = newMovementCostToNeigbour;
-                    neighbour.hCost = getDistance(neighbour, targetTile);
-                    neighbour.parent = currentTile;
+                foreach (TilePiece neighbour in currentTile.neighbours) {
+                    if (closedSet.Contains(neighbour)) {
+                        continue;
+                    }
 
-                    if (!openSet.Contains(neighbour)) {
-                        openSet.Add(neighbour); 
+                    int newMovementCostToNeigbour = currentTile.gCost + getDistance(currentTile, neighbour);
+                    if (newMovementCostToNeigbour < neighbour.gCost || !openSet.Contains(neighbour)) {
+                        neighbour.gCost = newMovementCostToNeigbour;
+                        neighbour.hCost = getDistance(neighbour, targetTile);
+                        neighbour.parent = currentTile;
+
+                        if (!openSet.Contains(neighbour)) {
+                            openSet.Add(neighbour);
+                        }
                     }
                 }
             }
         }
+
+        yield return null;
+        if (pathSuccess) {
+            waypoints = RetracePath(startTile, targetTile);
+        }
+        requestManager.FinishedProcessingPath(waypoints, pathSuccess);
     }
 
-    void RetracePath(TilePiece startTile,  TilePiece endTile) {
+    Vector3[] RetracePath(TilePiece startTile,  TilePiece endTile) {
+        print("start" + startTile);
+        print("end" + endTile);
         List<TilePiece> path = new List<TilePiece>();
         TilePiece currentTile = endTile;
 
+        path.Add(endTile);
         while (currentTile != startTile) { 
             path.Add(currentTile);
             currentTile = currentTile.parent;
         }
-        path.Reverse();
-        print(path);
+        path.Add(startTile);
+        for (int i = 0; i < path.Count; i++) {
+            print(path[i]);
+        }
+        Vector3[] waypoints = SimplifyPath(path);
+        Array.Reverse(waypoints);
+        return waypoints;
 
-        map.GetComponent<MapGeneratorHex>().path = path;
+    }
 
+    Vector3[] SimplifyPath(List<TilePiece> path) {
+        List<Vector3> waypoints = new List<Vector3>();  
+        Vector2 directionOld = Vector2.zero;
+
+        // path smoothing currently disabled
+        //for (int i = 1; i < path.Count; i++) {
+        //    Vector2 directionNew = new Vector2(path[i - 1].offsetCoordinate.x - path[i].offsetCoordinate.x, path[i - 1].offsetCoordinate.y - path[i].offsetCoordinate.y);
+        //    if (directionNew != directionOld) {
+        //        waypoints.Add(path[i].transform.position);
+        //        directionOld = directionNew;
+        //    }
+        //}
+        for (int i = 1; i < path.Count; i++) {
+            waypoints.Add(path[i].transform.position);
+            
+        }
+        return waypoints.ToArray();
     }
 
     int getDistance(TilePiece tileA, TilePiece tileB) {

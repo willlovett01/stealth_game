@@ -48,11 +48,6 @@ public class PlayerRB : MonoBehaviour {
                         // set current tile to previously selected one
                         currentTilePiece = requestedTilePiece;
 
-                        // set 
-                        requestedTilePiece = hitInfo.collider.GetComponent<TilePiece>();
-
-                        pathFinder.GetComponent<PathFinding>().FindPath(currentTilePiece, requestedTilePiece);
-
 
 
 
@@ -63,14 +58,12 @@ public class PlayerRB : MonoBehaviour {
                         requestedPositionLocal = requestedTile - transform.position;
                         targetDirection = Mathf.Atan2(requestedPositionLocal.x, requestedPositionLocal.z) * Mathf.Rad2Deg;
 
-
-
-
                     }
                 }
             }
         }
     }
+
 
     void FixedUpdate() {
         playerRigidBody.MoveRotation(Quaternion.Euler(Vector3.up * targetDirection));
@@ -84,6 +77,10 @@ public class PlayerRB : MonoBehaviour {
 
 } 
             
+
+
+
+
 
     
 

@@ -25,8 +25,8 @@ public class MapGeneratorHex : MonoBehaviour {
     public float outlinePercent;
 
     List<TilePiece> allTiles;
-    List<Transform> allGroundTiles;
-    Queue<Transform> allGroundTilePositionsShuffled;
+    List<TilePiece> allGroundTiles;
+    Queue<TilePiece> allGroundTilePositionsShuffled;
     
 
     float width;
@@ -36,7 +36,7 @@ public class MapGeneratorHex : MonoBehaviour {
     float mapOffsety;
     Vector3 distanceToCenter;
 
-    void Start () {
+    void Awake () {
 
         GenerateMap();
     }
@@ -46,7 +46,7 @@ public class MapGeneratorHex : MonoBehaviour {
 
         mapSize.y = mapSize.x;
 
-        allGroundTiles = new List<Transform>();
+        allGroundTiles = new List<TilePiece>();
         allTiles = new List<TilePiece> ();
 
         // create parent object for map
@@ -97,8 +97,8 @@ public class MapGeneratorHex : MonoBehaviour {
 
                     // create random array of tiles for trees (not allowing for any water tiles)
                     if (newTileType != "water") {
-                        allGroundTiles.Add(newTile);
-                        allGroundTilePositionsShuffled = new Queue<Transform>(Utility.ShuffleArray(allGroundTiles.ToArray(), treeSeed));
+                        allGroundTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
+                        allGroundTilePositionsShuffled = new Queue<TilePiece>(Utility.ShuffleArray(allGroundTiles.ToArray(), treeSeed));
                     }
                 }
             }
@@ -107,7 +107,7 @@ public class MapGeneratorHex : MonoBehaviour {
         // add trees
         // shuffle list of all ground tiles to randomly select some for trees
         for (int i = 0; i < treeCount; i++) {
-            Transform treePosition = GetRandomTile();
+            Transform treePosition = GetRandomTile().gameObject.transform;
 
             // make tree tiles non clickable
             treePosition.gameObject.GetComponent<TilePiece>().IsClickable();
@@ -157,16 +157,14 @@ public class MapGeneratorHex : MonoBehaviour {
     }
 
     // get a random tile
-    public Transform GetRandomTile() {
-        Transform randomTile= allGroundTilePositionsShuffled.Dequeue();
+    public TilePiece GetRandomTile() {
+        TilePiece randomTile = allGroundTilePositionsShuffled.Dequeue();
         allGroundTilePositionsShuffled.Enqueue(randomTile);
         return randomTile;
     }
 
     // get neighbours 
     private List<TilePiece> GetNeighbours(TilePiece tile) {
-
-        print(allTiles.Count);
 
         List<TilePiece> neighbours = new List<TilePiece>();
 
@@ -192,17 +190,6 @@ public class MapGeneratorHex : MonoBehaviour {
             }
         }
         return neighbours;
-    }
-
-    public List<TilePiece> path;
-    void Update() {
-        foreach (TilePiece tile in allTiles) {
-            if(path != null) {
-                if (path.Contains(tile)) {
-                    tile.gameObject.GetComponent<MeshRenderer>().material.color = Color.red;    
-                }
-            }
-        }
     }
 }
 
