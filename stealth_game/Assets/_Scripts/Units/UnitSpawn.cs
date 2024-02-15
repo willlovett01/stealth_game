@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using System;
 
 public class UnitSpawn : MonoBehaviour {
 
-    float speed = 5f;
+    public float speed = 2.5f;
     public GameObject pathFinder;
     public GameObject map;
 
     TilePiece currentTile;
     TilePiece requestedTile;
-    TilePiece swapTile;
 
     Vector3[] path;
     int targetIndex;
@@ -28,10 +28,6 @@ public class UnitSpawn : MonoBehaviour {
         PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
 
     }
-
-
-
-
 
     public void onPathFound(Vector3[] newPath, bool pathSuccessfull) {
         if (pathSuccessfull) {
@@ -49,13 +45,8 @@ public class UnitSpawn : MonoBehaviour {
             if (transform.position == currentWaypoint) {
                 targetIndex++;
                 if (targetIndex >= path.Length) {
-                    swapTile = currentTile;
-                    currentTile = requestedTile;
-                    requestedTile = swapTile;
-                    PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
-
-
-
+                    Array.Reverse(path);
+                    targetIndex = 0;
                 }
                 currentWaypoint = new Vector3(path[targetIndex].x, transform.position.y, path[targetIndex].z);
             }
@@ -86,4 +77,8 @@ public class UnitSpawn : MonoBehaviour {
         }
     }
 }
+
+
+
+
 
