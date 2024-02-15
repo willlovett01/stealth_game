@@ -9,6 +9,7 @@ public class MapGeneratorHex : MonoBehaviour {
     public Transform[] tilePrefab;
     public Transform[] treePrefab;
     public int treeCount;
+    public int treeSeed;
 
     // map controls
     public float seed = 10;
@@ -23,8 +24,10 @@ public class MapGeneratorHex : MonoBehaviour {
     [Range(0,1)]
     public float outlinePercent;
 
-    List<Transform> allGroundTiles;
-    Queue<Transform> allGroundTilePositionsShuffled;
+    List<TilePiece> allTiles;
+    List<TilePiece> allGroundTiles;
+    Queue<TilePiece> allGroundTilePositionsShuffled;
+    
 
     float width;
     float height;
@@ -33,7 +36,7 @@ public class MapGeneratorHex : MonoBehaviour {
     float mapOffsety;
     Vector3 distanceToCenter;
 
-    void Start () {
+    void Awake () {
 
         GenerateMap();
     }
@@ -43,7 +46,8 @@ public class MapGeneratorHex : MonoBehaviour {
 
         mapSize.y = mapSize.x;
 
-        allGroundTiles = new List<Transform>();
+        allGroundTiles = new List<TilePiece>();
+        allTiles = new List<TilePiece> ();
 
         // create parent object for map
         string holderName = "Generated Map";
@@ -65,6 +69,7 @@ public class MapGeneratorHex : MonoBehaviour {
 
                     // instantiate tile
                     Transform newTile = Instantiate(tilePrefab[GenerateNoise(x, y, noiseDetail)], tilePosition, Quaternion.Euler(Vector3.right * -90)) as Transform;
+                    allTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
 
                     // get tile type (grass, water, etc..)
                     string newTileType = newTile.gameObject.GetComponent<TilePiece>().tileType;
@@ -73,12 +78,17 @@ public class MapGeneratorHex : MonoBehaviour {
                     newTile.localScale *= tileSize;
                     newTile.localScale *= (1 - outlinePercent);
                     newTile.parent = mapHolder;
+                    newTile.name = ($"Hex C{x}, R{y}");
 
                     // add random rotation to each tile
                     int angle = Random.Range(0, 360);
                     int angleIncriments = angle - (angle % 60);
                     newTile.Rotate(new Vector3(0,0, angleIncriments), Space.Self);
 
+                    // assign coordinates
+                    newTile.gameObject.GetComponent<TilePiece>().cubeCoordinate = OffsetToCube(x, y);
+                    newTile.gameObject.GetComponent<TilePiece>().offsetCoordinate = new Vector2Int(x, y);
+                    
                     // lower water tiles (temp test)
                     if (newTileType == "water") { 
                         newTile.transform.position -= Vector3.up * 0.5f;
@@ -87,20 +97,17 @@ public class MapGeneratorHex : MonoBehaviour {
 
                     // create random array of tiles for trees (not allowing for any water tiles)
                     if (newTileType != "water") {
-                        allGroundTiles.Add(newTile);
-                        allGroundTilePositionsShuffled = new Queue<Transform>(Utility.ShuffleArray(allGroundTiles.ToArray(), 10));
+                        allGroundTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
+                        allGroundTilePositionsShuffled = new Queue<TilePiece>(Utility.ShuffleArray(allGroundTiles.ToArray(), treeSeed));
                     }
                 }
             }
         }
-                
-
+                 
         // add trees
         // shuffle list of all ground tiles to randomly select some for trees
-        
-
         for (int i = 0; i < treeCount; i++) {
-            Transform treePosition = GetRandomTile();
+            Transform treePosition = GetRandomTile().gameObject.transform;
 
             // make tree tiles non clickable
             treePosition.gameObject.GetComponent<TilePiece>().IsClickable();
@@ -111,6 +118,18 @@ public class MapGeneratorHex : MonoBehaviour {
             newTree.parent = mapHolder;
         }
 
+        // add neigbours 
+        foreach(TilePiece tile in allTiles) {
+            tile.neighbours = GetNeighbours(tile);
+        }
+
+    }
+
+    // change from offset coordinates to cube coordinates
+    public static Vector3Int OffsetToCube(int offset_x, int offset_y) {
+        var q = offset_x - (offset_y + (offset_y % 2)) / 2;
+        var r = offset_y;
+        return new Vector3Int(q, r, -q-r);
     }
 
     // generate noise
@@ -137,12 +156,45 @@ public class MapGeneratorHex : MonoBehaviour {
    
     }
 
-    public Transform GetRandomTile() {
-        Transform randomTile= allGroundTilePositionsShuffled.Dequeue();
+    // get a random tile
+    public TilePiece GetRandomTile() {
+        TilePiece randomTile = allGroundTilePositionsShuffled.Dequeue();
         allGroundTilePositionsShuffled.Enqueue(randomTile);
         return randomTile;
     }
+
+    // get neighbours 
+    private List<TilePiece> GetNeighbours(TilePiece tile) {
+
+        List<TilePiece> neighbours = new List<TilePiece>();
+
+        Vector3Int[] neighbourCoords = new Vector3Int[] {
+            new Vector3Int(1,-1,0),
+            new Vector3Int(1,0,-1),
+            new Vector3Int(0,1,-1),
+            new Vector3Int(-1,1,0),
+            new Vector3Int(-1,0,1),
+            new Vector3Int(0,-1,1)
+        };
+
+        foreach(Vector3Int coord in neighbourCoords) {
+            foreach(TilePiece piece in allTiles) {
+                if(piece.clickable) { 
+                    Vector3Int tileCoord = piece.cubeCoordinate;
+
+
+                    if (tileCoord == tile.cubeCoordinate + coord) {
+                        neighbours.Add(piece);
+                    }
+                }
+            }
+        }
+        return neighbours;
+    }
 }
+
+
+        
 
 
 

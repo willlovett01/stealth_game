@@ -9,6 +9,22 @@ public class TilePiece : MonoBehaviour {
     public string tileType;
     public bool clickable;
 
+    public Vector2Int offsetCoordinate;
+    public Vector3Int cubeCoordinate;
+    public List<TilePiece> neighbours;
+    public TilePiece parent;
+
+    public int gCost;
+    public int hCost;
+
+    public int fCost() {
+        return gCost + hCost;
+    }
+
+    public TilePiece() {
+
+    }
+     
     // Start is called before the first frame update
     void Start() {
         originalColor = gameObject.GetComponent<Renderer>().material.color;
@@ -33,6 +49,8 @@ public class TilePiece : MonoBehaviour {
     }
 
 }
+
+
 
 
 

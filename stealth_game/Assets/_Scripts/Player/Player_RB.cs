@@ -9,6 +9,9 @@ public class PlayerRB : MonoBehaviour {
     public float speed;
     public Camera gameCamera;
     public LayerMask layerMask;
+    public GameObject pathFinder;
+    TilePiece currentTilePiece;
+    TilePiece requestedTilePiece;
 
     Vector3 requestedPosition;
     Vector3 requestedTile;
@@ -42,6 +45,11 @@ public class PlayerRB : MonoBehaviour {
                         requestedPosition = hitInfo.point;
                         requestedTile = hitInfo.collider.transform.position;
 
+                        // set current tile to previously selected one
+                        currentTilePiece = requestedTilePiece;
+
+
+
 
                         print(requestedTile);
                         //requestedPosition = new Vector3(Mathf.Round(requestedPosition.x), transform.position.y, Mathf.Round(requestedPosition.z));
@@ -49,11 +57,13 @@ public class PlayerRB : MonoBehaviour {
 
                         requestedPositionLocal = requestedTile - transform.position;
                         targetDirection = Mathf.Atan2(requestedPositionLocal.x, requestedPositionLocal.z) * Mathf.Rad2Deg;
+
                     }
                 }
             }
         }
     }
+
 
     void FixedUpdate() {
         playerRigidBody.MoveRotation(Quaternion.Euler(Vector3.up * targetDirection));
@@ -67,6 +77,10 @@ public class PlayerRB : MonoBehaviour {
 
 } 
             
+
+
+
+
 
     
 
