@@ -25,13 +25,13 @@ public class UnitSpawn : MonoBehaviour {
         requestedTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
 
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
-        PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
+        PathRequestManagerSmoothed.RequestPath(currentTile, requestedTile, onPathFound);
 
     }
 
-    public void onPathFound(TilePiece[] newPath, bool pathSuccessfull) {
+    public void onPathFound(TilePiece[] Path, bool pathSuccessfull) {
         if (pathSuccessfull) {
-            path = newPath;
+            path = Path;
             StopCoroutine("FollowPath");
             StartCoroutine("FollowPath");
         }

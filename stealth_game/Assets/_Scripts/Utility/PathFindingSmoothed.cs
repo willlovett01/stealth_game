@@ -1,18 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using UnityEngine;
-using System;
 
 
-
-
-public class PathFinding : MonoBehaviour {
-
-    PathRequestManager requestManager;
+public class PathFindingSmoothed : MonoBehaviour {
+    PathRequestManagerSmoothed requestManager;
 
     void Awake() {
-        requestManager = GetComponent<PathRequestManager>();
+        requestManager = GetComponent<PathRequestManagerSmoothed>();
     }
 
     public void StartFindPath(TilePiece startPos, TilePiece endPos) {
@@ -73,14 +69,14 @@ public class PathFinding : MonoBehaviour {
         requestManager.FinishedProcessingPath(waypoints, pathSuccess);
     }
 
-    TilePiece[] RetracePath(TilePiece startTile,  TilePiece endTile) {
+    TilePiece[] RetracePath(TilePiece startTile, TilePiece endTile) {
         print("start" + startTile);
         print("end" + endTile);
         List<TilePiece> path = new List<TilePiece>();
         TilePiece currentTile = endTile;
 
         path.Add(endTile);
-        while (currentTile != startTile) { 
+        while (currentTile != startTile) {
             path.Add(currentTile);
             currentTile = currentTile.parent;
         }
@@ -96,8 +92,16 @@ public class PathFinding : MonoBehaviour {
 
     TilePiece[] SimplifyPath(List<TilePiece> path) {
         List<TilePiece> waypoints = new List<TilePiece>();
+
         for (int i = 1; i < path.Count; i++) {
-            waypoints.Add(path[i]);
+
+            Vector3 prevDir = path[i].transform.position - path[Mathf.Clamp((i - 1), 0, path.Count - 1)].transform.position;
+            Vector3 nextDir = path[i].transform.position - path[Mathf.Clamp((i + 1), 0, path.Count - 1)].transform.position;
+            print(prevDir);
+            print(nextDir);
+            if (nextDir + prevDir != Vector3.zero) {
+                waypoints.Add(path[i]);
+            }
         }
         return waypoints.ToArray();
     }
@@ -106,9 +110,9 @@ public class PathFinding : MonoBehaviour {
         int dstX = Mathf.Abs(tileA.offsetCoordinate.x - tileB.offsetCoordinate.x);
         int dstY = Mathf.Abs(tileA.offsetCoordinate.y - tileB.offsetCoordinate.y);
 
-        if (dstX > dstY) 
-            return 14*dstY + 10* (dstX - dstY);
-        return 14*dstX + 10* (dstY - dstX);
+        if (dstX > dstY)
+            return 14 * dstY + 10 * (dstX - dstY);
+        return 14 * dstX + 10 * (dstY - dstX);
     }
 }
 

@@ -1,21 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class PathRequestManager : MonoBehaviour {
+
+public class PathRequestManagerSmoothed : MonoBehaviour {
 
     Queue<PathRequest> pathReqestQueue = new Queue<PathRequest>();
     PathRequest currentPathRequest;
 
-    static PathRequestManager instance;
-    PathFinding pathFinding;
+    static PathRequestManagerSmoothed instance;
+    PathFindingSmoothed pathFindingSmoothed;
 
     bool isProcessingPath;
 
     private void Awake() {
         instance = this;
-        pathFinding = GetComponent<PathFinding>();
+        pathFindingSmoothed = GetComponent<PathFindingSmoothed>();
     }
 
     public static void RequestPath(TilePiece pathStart, TilePiece pathEnd, Action<TilePiece[], bool> callback) {
@@ -30,7 +32,7 @@ public class PathRequestManager : MonoBehaviour {
         if (!isProcessingPath && pathReqestQueue.Count > 0) {
             currentPathRequest = pathReqestQueue.Dequeue();
             isProcessingPath = true;
-            pathFinding.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd);
+            pathFindingSmoothed.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd);
         }
     }
 
@@ -38,7 +40,7 @@ public class PathRequestManager : MonoBehaviour {
         currentPathRequest.callback(path, success);
         isProcessingPath = false;
         TryProcessNext();
-    } 
+    }
 
     struct PathRequest {
         public TilePiece pathStart;
@@ -52,3 +54,4 @@ public class PathRequestManager : MonoBehaviour {
         }
     }
 }
+
