@@ -14,7 +14,7 @@ public class UnitSpawn : MonoBehaviour {
     TilePiece currentTile;
     TilePiece requestedTile;
 
-    Vector3[] path;
+    TilePiece[] path;
     int targetIndex;
 
 
@@ -29,7 +29,7 @@ public class UnitSpawn : MonoBehaviour {
 
     }
 
-    public void onPathFound(Vector3[] newPath, bool pathSuccessfull) {
+    public void onPathFound(TilePiece[] newPath, bool pathSuccessfull) {
         if (pathSuccessfull) {
             path = newPath;
             StopCoroutine("FollowPath");
@@ -38,21 +38,22 @@ public class UnitSpawn : MonoBehaviour {
     }
 
     IEnumerator FollowPath() {
-        Vector3 currentWaypoint = new Vector3(path[0].x, transform.position.y, path[0].z);
+        TilePiece currentWaypoint = path[0];
         targetIndex = 0;
+        Vector3 height = new Vector3(0, transform.position.y, 0);
 
         while (true) {
-            if (transform.position == currentWaypoint) {
+            if (transform.position == currentWaypoint.transform.position + height) {
                 targetIndex++;
                 if (targetIndex >= path.Length) {
                     Array.Reverse(path);
                     targetIndex = 0;
                 }
-                currentWaypoint = new Vector3(path[targetIndex].x, transform.position.y, path[targetIndex].z);
+                currentWaypoint = path[targetIndex];
             }
 
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed * Time.deltaTime);
-            transform.LookAt(currentWaypoint);
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.transform.position + height, speed * Time.deltaTime);
+            transform.LookAt(currentWaypoint.transform.position + height);
             yield return null;
 
         }
@@ -65,19 +66,19 @@ public class UnitSpawn : MonoBehaviour {
         if (path != null) {
             for (int i = targetIndex; i < path.Length; i++) {
                 Gizmos.color = Color.red;
-                Gizmos.DrawCube(path[i], Vector3.one * 0.1f);
+                Gizmos.DrawCube(path[i].transform.position, Vector3.one * 0.1f);
 
                 if (i == targetIndex) {
-                    Gizmos.DrawLine(transform.position, path[i]);
+                    Gizmos.DrawLine(transform.position, path[i].transform.position);
                 }
                 else {
-                    Gizmos.DrawLine(path[i - 1], path[i]);
+                    Gizmos.DrawLine(path[i - 1].transform.position, path[i].transform.position);
                 }
             }
         }
     }
-}
 
+}
 
 
 

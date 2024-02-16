@@ -22,7 +22,7 @@ public class PathFinding : MonoBehaviour {
 
     IEnumerator FindPath(TilePiece startTile, TilePiece targetTile) {
 
-        Vector3[] waypoints = new Vector3[0];
+        TilePiece[] waypoints = new TilePiece[0];
         bool pathSuccess = false;
 
         if (startTile.clickable && targetTile.clickable) {
@@ -73,7 +73,7 @@ public class PathFinding : MonoBehaviour {
         requestManager.FinishedProcessingPath(waypoints, pathSuccess);
     }
 
-    Vector3[] RetracePath(TilePiece startTile,  TilePiece endTile) {
+    TilePiece[] RetracePath(TilePiece startTile,  TilePiece endTile) {
         print("start" + startTile);
         print("end" + endTile);
         List<TilePiece> path = new List<TilePiece>();
@@ -88,14 +88,14 @@ public class PathFinding : MonoBehaviour {
         for (int i = 0; i < path.Count; i++) {
             print(path[i]);
         }
-        Vector3[] waypoints = SimplifyPath(path);
+        TilePiece[] waypoints = SimplifyPath(path);
         Array.Reverse(waypoints);
         return waypoints;
 
     }
 
-    Vector3[] SimplifyPath(List<TilePiece> path) {
-        List<Vector3> waypoints = new List<Vector3>();  
+    TilePiece[] SimplifyPath(List<TilePiece> path) {
+        List<TilePiece> waypoints = new List<TilePiece>();  
         Vector2 directionOld = Vector2.zero;
 
         // path smoothing currently disabled
@@ -107,7 +107,7 @@ public class PathFinding : MonoBehaviour {
         //    }
         //}
         for (int i = 1; i < path.Count; i++) {
-            waypoints.Add(path[i].transform.position);
+            waypoints.Add(path[i]);
             
         }
         return waypoints.ToArray();
