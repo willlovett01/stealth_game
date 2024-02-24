@@ -47,7 +47,7 @@ public class Unit01 : MonoBehaviour {
     private void Update() {
 
         // set line visibility if object is selected
-        if (currentlySelectedObject.GetComponent<currentSelectedObject>().currentObject == gameObject) {
+        if (currentlySelectedObject.GetComponent<currentSelectedObject>().currentObject == gameObject.name) {
             lineRenderer.enabled = true;
         }
         else {

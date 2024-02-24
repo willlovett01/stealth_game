@@ -107,7 +107,9 @@ public class MapGeneratorHex : MonoBehaviour {
         // add trees
         // shuffle list of all ground tiles to randomly select some for trees
         for (int i = 0; i < treeCount; i++) {
-            Transform treePosition = GetRandomTile().gameObject.transform;
+            TilePiece randomTile = GetRandomTile();
+            randomTile.GetComponent<TilePiece>().tileType = "tree";
+            Transform treePosition = randomTile.gameObject.transform;
 
             // make tree tiles non clickable
             treePosition.gameObject.GetComponent<TilePiece>().IsClickable();

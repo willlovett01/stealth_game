@@ -6,11 +6,12 @@ public class currentSelectedObject : MonoBehaviour {
 
     public Camera gameCamera;
 
-    public GameObject currentObject;
+    public string currentObject;
 
 
     // Start is called before the first frame update
     void Start() {
+        currentObject = null;
 
     }
 
@@ -24,13 +25,22 @@ public class currentSelectedObject : MonoBehaviour {
             RaycastHit hitInfo;
 
             if (Physics.Raycast(ray, out hitInfo)) {
-                currentObject = hitInfo.collider.gameObject;
-                print(currentObject);
+                // check if hit tile
+                if (hitInfo.collider.gameObject.layer == 7) {
+                    currentObject = hitInfo.collider.gameObject.GetComponent<TilePiece>().tileType;
+                }
+                else {
+                    currentObject = hitInfo.collider.gameObject.name;
+                }
 
             }
             else {
                 currentObject = null;
             }
         }
+    }
+
+    public void setSelectedObject(GameObject selectedObject) {
+        currentObject = selectedObject.name;
     }
 }

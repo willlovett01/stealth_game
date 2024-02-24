@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour {
 
@@ -49,6 +50,9 @@ public class Player : MonoBehaviour {
                 requestedTile = hitInfo.collider.GetComponent<TilePiece>();
                 PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
 
+            }
+            else {
+                return;
             }
 
         }
