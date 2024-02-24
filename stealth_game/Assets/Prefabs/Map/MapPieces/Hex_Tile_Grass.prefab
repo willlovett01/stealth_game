@@ -106,6 +106,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileType: grass
   clickable: 1
+  offsetCoordinate: {x: 0, y: 0}
+  cubeCoordinate: {x: 0, y: 0, z: 0}
+  neighbours: []
+  parent: {fileID: 0}
+  gCost: 0
+  hCost: 0
 --- !u!64 &-4827111958903303400
 MeshCollider:
   m_ObjectHideFlags: 0

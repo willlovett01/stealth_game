@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
+using System.Linq;
 
 public class Player : MonoBehaviour {
 
@@ -12,17 +14,23 @@ public class Player : MonoBehaviour {
     public LayerMask layerMask;
     public GameObject pathFinder;
     public GameObject map;
+    public GameObject attackDisplay;
+    public event Action onPlayerAOE;
+    LineRenderer lineRenderer;
 
     TilePiece requestedTile;
-    TilePiece currentTile;
+    public TilePiece currentTile;
 
 
     TilePiece[] path;
+    List<Vector3> tilePiecePositions;
     int targetIndex;
     
     
     // Start is called before the first frame update
     void Start() {
+        lineRenderer = GetComponent<LineRenderer>();
+        tilePiecePositions = new List<Vector3>();
         currentTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
         
@@ -40,18 +48,28 @@ public class Player : MonoBehaviour {
             if (Physics.Raycast(ray, out hitInfo, layerMask)) {
                 requestedTile = hitInfo.collider.GetComponent<TilePiece>();
                 PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
-                
 
             }
 
         }
-   
+        if(Input.GetKeyDown(KeyCode.Space)) {
+            StartCoroutine("Attack");
+        }
     }
-
 
     public void onPathFound(TilePiece[] newPath, bool pathSuccessfull) {
         if (pathSuccessfull) {
+            tilePiecePositions = new List<Vector3>();
             path = newPath;
+
+            foreach(TilePiece tilePiece in path) {
+                tilePiecePositions.Add(tilePiece.transform.position + new Vector3(0,0.05f,0));
+            }
+
+            // update line visual
+            lineRenderer.positionCount = tilePiecePositions.Count;
+            lineRenderer.SetPositions(tilePiecePositions.ToArray());
+
             StopCoroutine("FollowPath");
             StartCoroutine("FollowPath");
         }
@@ -79,7 +97,19 @@ public class Player : MonoBehaviour {
 
         }
     }
+   
+    // basic AOE attack (temp)
+    IEnumerator Attack() {
+        Vector3 attackPos = new Vector3(currentTile.transform.position.x, 0.1f, currentTile.transform.position.z);
+        GameObject attackAnim = Instantiate(attackDisplay, attackPos, Quaternion.Euler(Vector3.right * -90));
+        attackAnim.transform.position = currentTile.gameObject.transform.position; 
+        yield return new WaitForSeconds(1);
+        Destroy(attackAnim);
 
+
+    }
+
+                
     void OnDrawGizmos() {
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, transform.forward * 3);
@@ -98,8 +128,13 @@ public class Player : MonoBehaviour {
             }
         }
     }
-
 } 
+
+    
+
+
+
+
 
 
     
