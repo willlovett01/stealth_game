@@ -40,7 +40,7 @@ public class Unit01 : MonoBehaviour {
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
 
         PathRequestManagerSmoothed.RequestPath(currentTile, requestedTile, onPathFound);
-        transform.LookAt(path[1].transform.position);
+       
 
     }
 

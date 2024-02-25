@@ -16,7 +16,6 @@ public class Player : MonoBehaviour {
     public GameObject pathFinder;
     public GameObject map;
     public GameObject attackDisplay;
-    public event Action onPlayerAOE;
     LineRenderer lineRenderer;
 
     TilePiece requestedTile;
@@ -30,13 +29,14 @@ public class Player : MonoBehaviour {
     
     // Start is called before the first frame update
     void Start() {
+
         lineRenderer = GetComponent<LineRenderer>();
         tilePiecePositions = new List<Vector3>();
         currentTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
         
-
     }
+
 
     // Update is called once per frame
     void Update() {

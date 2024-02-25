@@ -74,8 +74,7 @@ public class PathFinding : MonoBehaviour {
     }
 
     TilePiece[] RetracePath(TilePiece startTile,  TilePiece endTile) {
-        print("start" + startTile);
-        print("end" + endTile);
+
         List<TilePiece> path = new List<TilePiece>();
         TilePiece currentTile = endTile;
 
@@ -85,9 +84,6 @@ public class PathFinding : MonoBehaviour {
             currentTile = currentTile.parent;
         }
         path.Add(startTile);
-        for (int i = 0; i < path.Count; i++) {
-            print(path[i]);
-        }
         TilePiece[] waypoints = SimplifyPath(path);
         Array.Reverse(waypoints);
         return waypoints;

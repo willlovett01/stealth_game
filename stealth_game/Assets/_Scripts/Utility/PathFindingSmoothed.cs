@@ -70,8 +70,7 @@ public class PathFindingSmoothed : MonoBehaviour {
     }
 
     TilePiece[] RetracePath(TilePiece startTile, TilePiece endTile) {
-        print("start" + startTile);
-        print("end" + endTile);
+
         List<TilePiece> path = new List<TilePiece>();
         TilePiece currentTile = endTile;
 
@@ -81,9 +80,7 @@ public class PathFindingSmoothed : MonoBehaviour {
             currentTile = currentTile.parent;
         }
         path.Add(startTile);
-        for (int i = 0; i < path.Count; i++) {
-            print(path[i]);
-        }
+
         TilePiece[] waypoints = SimplifyPath(path);
         Array.Reverse(waypoints);
         return waypoints;
@@ -97,8 +94,7 @@ public class PathFindingSmoothed : MonoBehaviour {
 
             Vector3 prevDir = path[i].transform.position - path[Mathf.Clamp((i - 1), 0, path.Count - 1)].transform.position;
             Vector3 nextDir = path[i].transform.position - path[Mathf.Clamp((i + 1), 0, path.Count - 1)].transform.position;
-            print(prevDir);
-            print(nextDir);
+
             if (nextDir + prevDir != Vector3.zero) {
                 waypoints.Add(path[i]);
             }
@@ -115,6 +111,7 @@ public class PathFindingSmoothed : MonoBehaviour {
         return 14 * dstX + 10 * (dstY - dstX);
     }
 }
+
 
           
 

@@ -27,21 +27,21 @@ public class TilePiece : MonoBehaviour {
      
     // Start is called before the first frame update
     void Start() {
-        originalColor = gameObject.GetComponent<Renderer>().material.color;
+        //originalColor = gameObject.GetComponent<Renderer>().material.color;
     }
 
     void OnMouseOver() {
-        if (clickable) {
-            gameObject.GetComponent<Renderer>().material.color = Color.white;
-        }
-        else {
-            gameObject.GetComponent<Renderer>().material.color = Color.red;
-        }
+        //if (clickable) {
+        //    gameObject.GetComponent<Renderer>().material.color = Color.white;
+        //}
+        //else {
+        //    gameObject.GetComponent<Renderer>().material.color = Color.red;
+        //}
     }
 
     void OnMouseExit() {
  
-         gameObject.GetComponent<Renderer>().material.color = originalColor;
+         //gameObject.GetComponent<Renderer>().material.color = originalColor;
 
 
     }

@@ -68,7 +68,7 @@ public class MapGeneratorHex : MonoBehaviour {
                 if (distanceToCenter.magnitude < mapRadius) {
 
                     // instantiate tile
-                    Transform newTile = Instantiate(tilePrefab[GenerateNoise(x, y, noiseDetail)], tilePosition, Quaternion.Euler(Vector3.right * -90)) as Transform;
+                    Transform newTile = Instantiate(tilePrefab[GenerateNoise(x, y, noiseDetail)], tilePosition, Quaternion.identity) as Transform;
                     allTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
 
                     // get tile type (grass, water, etc..)
@@ -83,7 +83,7 @@ public class MapGeneratorHex : MonoBehaviour {
                     // add random rotation to each tile
                     int angle = Random.Range(0, 360);
                     int angleIncriments = angle - (angle % 60);
-                    newTile.Rotate(new Vector3(0,0, angleIncriments), Space.Self);
+                    newTile.Rotate(new Vector3(0, angleIncriments, 0), Space.Self);
 
                     // assign coordinates
                     newTile.gameObject.GetComponent<TilePiece>().cubeCoordinate = OffsetToCube(x, y);
