@@ -34,12 +34,15 @@ public class TilePiece : MonoBehaviour {
         if (clickable) {
             gameObject.GetComponent<Renderer>().material.color = Color.white;
         }
+        else {
+            gameObject.GetComponent<Renderer>().material.color = Color.red;
+        }
     }
 
     void OnMouseExit() {
-        if (clickable) {
-            gameObject.GetComponent<Renderer>().material.color = originalColor;
-        }
+ 
+         gameObject.GetComponent<Renderer>().material.color = originalColor;
+
 
     }
 

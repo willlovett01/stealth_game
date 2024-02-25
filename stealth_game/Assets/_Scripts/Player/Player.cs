@@ -71,6 +71,7 @@ public class Player : MonoBehaviour {
             }
 
             // update line visual
+            lineRenderer.enabled = true;
             lineRenderer.positionCount = tilePiecePositions.Count;
             lineRenderer.SetPositions(tilePiecePositions.ToArray());
 
@@ -91,6 +92,7 @@ public class Player : MonoBehaviour {
                     yield break;
                 }
                 currentWaypoint = path[targetIndex];
+            
             }
 
             currentTile = currentWaypoint;

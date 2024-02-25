@@ -89,6 +89,7 @@ public class Unit01 : MonoBehaviour {
                 if (targetIndex >= path.Length) {
                     Array.Reverse(path);
                     targetIndex = 0;
+                    yield return new WaitForSeconds(3);
 
                 }
                 
