@@ -304,7 +304,9 @@ Shader "Custom/BotWGrass"
 					float3x3 randBendMatrix = angleAxis3x3(rand(pos.zzx) * _BendDelta * UNITY_PI * 0.5f, float3(-1.0f, 0, 0));
 
 					float2 windUV = pos.xz * _WindMap_ST.xy + _WindMap_ST.zw + normalize(_WindVelocity.xzy) * _WindFrequency * _Time.y;
+					
 					float2 windSample = (tex2Dlod(_WindMap, float4(windUV, 0, 0)).xy * 2 - 1) * length(_WindVelocity);
+
 
 					float3 windAxis = normalize(float3(windSample.x, windSample.y, 0));
 					float3x3 windMatrix = angleAxis3x3(UNITY_PI * windSample, windAxis);
@@ -368,7 +370,7 @@ Shader "Custom/BotWGrass"
 
 				float4 shadowCoord = GetShadowCoord(vertexInput);
 				half shadowAttenuation = saturate(MainLightRealtimeShadow(shadowCoord) + 0.25f);
-				float4 shadowColor = lerp(0.0f, 1.0f, shadowAttenuation);
+				float4 shadowColor = lerp(0.5f, 1.0f, shadowAttenuation);
 				color *= shadowColor;
 			#endif
 
