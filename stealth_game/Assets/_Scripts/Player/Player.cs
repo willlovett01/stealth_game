@@ -15,7 +15,6 @@ public class Player : MonoBehaviour {
     public LayerMask layerMask;
     public GameObject pathFinder;
     public GameObject map;
-    public GameObject attackDisplay;
     LineRenderer lineRenderer;
 
     TilePiece requestedTile;
@@ -47,18 +46,13 @@ public class Player : MonoBehaviour {
             RaycastHit hitInfo;
 
             if (Physics.Raycast(ray, out hitInfo, layerMask)) {
-                requestedTile = hitInfo.collider.GetComponent<TilePiece>();
-                PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
-
+                if (hitInfo.collider.GetComponent<TilePiece>() != null) {
+                    requestedTile = hitInfo.collider.GetComponent<TilePiece>();
+                    PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
+                }
             }
-            else {
-                return;
-            }
+        }
 
-        }
-        if(Input.GetKeyDown(KeyCode.Space)) {
-            StartCoroutine("Attack");
-        }
     }
 
     public void onPathFound(TilePiece[] newPath, bool pathSuccessfull) {
@@ -92,30 +86,31 @@ public class Player : MonoBehaviour {
                     yield break;
                 }
                 currentWaypoint = path[targetIndex];
+                //yield return StartCoroutine("Turn");
             
             }
 
             currentTile = currentWaypoint;
  
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.transform.position + height, speed * Time.deltaTime);
-            transform.LookAt(currentWaypoint.transform.position + height);
+            transform.LookAt(path.Last().transform.position + height);
             yield return null;
 
         }
     }
-   
-    // basic AOE attack (temp)
-    IEnumerator Attack() {
-        Vector3 attackPos = new Vector3(currentTile.transform.position.x, 0.1f, currentTile.transform.position.z);
-        GameObject attackAnim = Instantiate(attackDisplay, attackPos, Quaternion.Euler(Vector3.right * -90));
-        attackAnim.transform.position = currentTile.gameObject.transform.position; 
-        yield return new WaitForSeconds(1);
-        Destroy(attackAnim);
 
+    IEnumerator Turn() {
+        Vector3 directionToTarget = (path[targetIndex].transform.position - transform.position).normalized;
+        float targetAngle = 90 - Mathf.Atan2(directionToTarget.z, directionToTarget.x) * Mathf.Rad2Deg;
 
+        while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.005) {
+            float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, 1000 * Time.deltaTime);
+            transform.eulerAngles = Vector3.up * angle;
+            yield return null;
+        }
     }
 
-                
+
     void OnDrawGizmos() {
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, transform.forward * 3);

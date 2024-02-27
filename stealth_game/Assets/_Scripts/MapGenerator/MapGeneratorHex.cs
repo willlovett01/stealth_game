@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class MapGeneratorHex : MonoBehaviour {
 
@@ -13,30 +15,24 @@ public class MapGeneratorHex : MonoBehaviour {
 
     // map controls
     public float seed = 10;
-    public float mapRadius;
+    public int mapRadius;
     public float tileSize;
-    public Vector2 mapSize;
 
 
     [Range(1f, 100)]
     public float noiseDetail;
 
-    [Range(0,1)]
+    [Range(0, 1)]
     public float outlinePercent;
 
-    List<TilePiece> allTiles;
+    public List<TilePiece> allTiles;
     List<TilePiece> allGroundTiles;
     Queue<TilePiece> allGroundTilePositionsShuffled;
-    
 
-    float width;
-    float height;
-    float offset;
-    float mapOffsetx;
-    float mapOffsety;
-    Vector3 distanceToCenter;
 
-    void Awake () {
+    List<Vector2Int> tileCoordinates;
+
+    void Awake() {
 
         GenerateMap();
     }
@@ -44,10 +40,16 @@ public class MapGeneratorHex : MonoBehaviour {
     // map generator
     public void GenerateMap() {
 
-        mapSize.y = mapSize.x;
 
         allGroundTiles = new List<TilePiece>();
-        allTiles = new List<TilePiece> ();
+        allTiles = new List<TilePiece>();
+        tileCoordinates = new List<Vector2Int>();
+
+        // map radius coords
+        List<Vector3> radialCoordinates = new List<Vector3>();
+        List<int> q = new List<int>();
+        List<int> r = new List<int>();
+        List<int> s = new List<int>();
 
         // create parent object for map
         string holderName = "Generated Map";
@@ -57,53 +59,74 @@ public class MapGeneratorHex : MonoBehaviour {
         Transform mapHolder = new GameObject(holderName).transform;
         mapHolder.parent = transform;
 
-        // create map grid 
-        for (int x = 0; x < mapSize.x; x++) {
-            for (int y = 0; y < mapSize.y; y++) {
-            
-                Vector3 tilePosition = CoordToPosition(x, y);
-                distanceToCenter = Vector3.zero - tilePosition;
+        // add positive numbers based off radius
+        for (int i = 1; i <= mapRadius; i++) {
+            q.Add(i);
+            r.Add(i);
+            s.Add(i);
+        }
 
-                // only instantiate tiles within a certain distance to center (to create circle shape)
-                if (distanceToCenter.magnitude < mapRadius) {
+        // add positive numbers based off radius
+        for (int i = 0; i >= -mapRadius; i--) {
+            q.Add(i);
+            r.Add(i);
+            s.Add(i);
+        }
 
-                    // instantiate tile
-                    Transform newTile = Instantiate(tilePrefab[GenerateNoise(x, y, noiseDetail)], tilePosition, Quaternion.identity) as Transform;
-                    allTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
 
-                    // get tile type (grass, water, etc..)
-                    string newTileType = newTile.gameObject.GetComponent<TilePiece>().tileType;
+        // calculate cube coords for all tiles within desired radius and add them to a list of coords in offset 
+        foreach (int _q in q) {
+            foreach(int _r in r) {
+                foreach (int _s in s) {
+                    if (_q + _r + _s == 0) {
 
-                    // scale each piece to add outlines for visual clarity
-                    newTile.localScale *= tileSize;
-                    newTile.localScale *= (1 - outlinePercent);
-                    newTile.parent = mapHolder;
-                    newTile.name = ($"Hex C{x}, R{y}");
-
-                    // add random rotation to each tile
-                    int angle = Random.Range(0, 360);
-                    int angleIncriments = angle - (angle % 60);
-                    newTile.Rotate(new Vector3(0, angleIncriments, 0), Space.Self);
-
-                    // assign coordinates
-                    newTile.gameObject.GetComponent<TilePiece>().cubeCoordinate = OffsetToCube(x, y);
-                    newTile.gameObject.GetComponent<TilePiece>().offsetCoordinate = new Vector2Int(x, y);
-                    
-                    // lower water tiles (temp test)
-                    if (newTileType == "water") { 
-                        newTile.transform.position -= Vector3.up * 0.5f;
-                        newTile.gameObject.GetComponent<TilePiece>().IsClickable();
-                    }
-
-                    // create random array of tiles for trees (not allowing for any water tiles)
-                    if (newTileType != "water") {
-                        allGroundTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
-                        allGroundTilePositionsShuffled = new Queue<TilePiece>(Utility.ShuffleArray(allGroundTiles.ToArray(), treeSeed));
+                        // add map radius to offset to remove any negative value coords 
+                        tileCoordinates.Add((CoordinateConversions.CubeToOffset(_q + mapRadius, _r + mapRadius)));
                     }
                 }
             }
+        } 
+            
+        // instantiate tile per coordinate
+        foreach (Vector2Int pos in tileCoordinates) {
+
+            Vector3 tilePosition = CoordinateConversions.CoordToPosition(pos.x, pos.y, mapRadius, tileSize);
+
+            // instantiate tile
+            Transform newTile = Instantiate(tilePrefab[GenerateNoise(pos.x, pos.y, noiseDetail)], tilePosition, Quaternion.identity) as Transform;
+            allTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
+
+            // get tile type (grass, water, etc..)
+            string newTileType = newTile.gameObject.GetComponent<TilePiece>().tileType;
+
+            // scale each piece to add outlines for visual clarity
+            newTile.localScale *= tileSize;
+            newTile.localScale *= (1 - outlinePercent);
+            newTile.parent = mapHolder;
+            newTile.name = ($"Hex C{pos.x}, R{pos.y}");
+
+            // add random rotation to each tile
+            int angle = Random.Range(0, 360);
+            int angleIncriments = angle - (angle % 60);
+            newTile.Rotate(new Vector3(0, angleIncriments, 0), Space.Self);
+
+            // assign coordinates
+            newTile.gameObject.GetComponent<TilePiece>().cubeCoordinate = CoordinateConversions.OffsetToCube(pos.x, pos.y);
+            newTile.gameObject.GetComponent<TilePiece>().offsetCoordinate = new Vector2Int(pos.x, pos.y);
+
+            // lower water tiles (temp test)
+            if (newTileType == "water") {
+                newTile.transform.position -= Vector3.up * 0.5f;
+                newTile.gameObject.GetComponent<TilePiece>().IsClickable();
+            }
+
+            // create random array of tiles for trees (not allowing for any water tiles)
+            if (newTileType != "water") {
+                allGroundTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
+                allGroundTilePositionsShuffled = new Queue<TilePiece>(Utility.ShuffleArray(allGroundTiles.ToArray(), treeSeed));
+            }
         }
-                 
+                
         // add trees
         // shuffle list of all ground tiles to randomly select some for trees
         for (int i = 0; i < treeCount; i++) {
@@ -116,22 +139,15 @@ public class MapGeneratorHex : MonoBehaviour {
 
             // instantiate tree
             Transform newTree = Instantiate(treePrefab[0], treePosition.position, Quaternion.identity);
-            newTree.Rotate(new Vector3(0, Random.Range(0,360), 0), Space.Self);
+            newTree.Rotate(new Vector3(0, Random.Range(0, 360), 0), Space.Self);
             newTree.parent = mapHolder;
         }
 
         // add neigbours 
-        foreach(TilePiece tile in allTiles) {
-            tile.neighbours = GetNeighbours(tile);
+        foreach (TilePiece tile in allTiles) {
+            tile.neighbours = GetNeighbours(tile, allTiles);
         }
-
-    }
-
-    // change from offset coordinates to cube coordinates
-    public static Vector3Int OffsetToCube(int offset_x, int offset_y) {
-        var q = offset_x - (offset_y + (offset_y % 2)) / 2;
-        var r = offset_y;
-        return new Vector3Int(q, r, -q-r);
+        print(allTiles.Count);
     }
 
     // generate noise
@@ -143,21 +159,6 @@ public class MapGeneratorHex : MonoBehaviour {
         return (int)(Mathf.PerlinNoise(xNoise, zNoise)*tilePrefab.Length);
     }
 
-    // generate tile position based on its coordinate
-    Vector3 CoordToPosition(int x, int y) {
-
-        width = Mathf.Sqrt(3) * tileSize;
-        height = 2f * tileSize * (3f/4f);
-
-        mapOffsetx = width * mapSize.x/2;
-        mapOffsety = height * mapSize.y/2;
-
-        offset = (y % 2 == 0) ? width / 2 : 0;
-
-        return new Vector3((x * width) + offset - mapOffsetx, 0, (y * height) - mapOffsety);
-   
-    }
-
     // get a random tile
     public TilePiece GetRandomTile() {
         TilePiece randomTile = allGroundTilePositionsShuffled.Dequeue();
@@ -166,7 +167,7 @@ public class MapGeneratorHex : MonoBehaviour {
     }
 
     // get neighbours 
-    private List<TilePiece> GetNeighbours(TilePiece tile) {
+    public List<TilePiece> GetNeighbours(TilePiece tile, List<TilePiece> allTiles) {
 
         List<TilePiece> neighbours = new List<TilePiece>();
 
@@ -179,9 +180,9 @@ public class MapGeneratorHex : MonoBehaviour {
             new Vector3Int(0,-1,1)
         };
 
-        foreach(Vector3Int coord in neighbourCoords) {
-            foreach(TilePiece piece in allTiles) {
-                if(piece.clickable) { 
+        foreach (Vector3Int coord in neighbourCoords) {
+            foreach (TilePiece piece in allTiles) {
+                if (piece.clickable) {
                     Vector3Int tileCoord = piece.cubeCoordinate;
 
 
@@ -193,7 +194,26 @@ public class MapGeneratorHex : MonoBehaviour {
         }
         return neighbours;
     }
+
 }
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         

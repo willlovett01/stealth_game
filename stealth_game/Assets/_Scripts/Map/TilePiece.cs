@@ -21,33 +21,7 @@ public class TilePiece : MonoBehaviour {
         return gCost + hCost;
     }
 
-    public TilePiece() {
-
-    }
-     
-    // Start is called before the first frame update
-    void Start() {
-        //originalColor = gameObject.GetComponent<Renderer>().material.color;
-    }
-
-    void OnMouseOver() {
-        //if (clickable) {
-        //    gameObject.GetComponent<Renderer>().material.color = Color.white;
-        //}
-        //else {
-        //    gameObject.GetComponent<Renderer>().material.color = Color.red;
-        //}
-    }
-
-    void OnMouseExit() {
- 
-         //gameObject.GetComponent<Renderer>().material.color = originalColor;
-
-
-    }
-
     public void IsClickable() {
-        //gameObject.GetComponent<Renderer>().material.color = Color.red;
         clickable = false;
     }
 

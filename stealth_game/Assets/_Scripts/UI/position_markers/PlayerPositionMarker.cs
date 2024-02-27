@@ -19,12 +19,14 @@ public class PlayerPositionMarker : MonoBehaviour {
         RaycastHit hit;
         Ray ray = gameCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, layerMask)) {
+            gameObject.GetComponent<MeshRenderer>().enabled = true;
             transform.position = hit.collider.transform.position;
-            
-            GetComponent<MeshRenderer>().material.SetInt("_walkable", Convert.ToInt32(hit.collider.GetComponent<TilePiece>().clickable));
+            if (hit.collider.GetComponent<TilePiece>() != null) {
+                GetComponent<MeshRenderer>().material.SetInt("_walkable", Convert.ToInt32(hit.collider.GetComponent<TilePiece>().clickable));
+            }
         }
         else {
-            return;
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
         }
     }
 }

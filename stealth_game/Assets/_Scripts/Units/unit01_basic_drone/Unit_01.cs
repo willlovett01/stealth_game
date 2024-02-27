@@ -21,6 +21,8 @@ public class Unit01 : MonoBehaviour {
     TilePiece currentTile;
     TilePiece requestedTile;
 
+    public TilePiece currentCoord;
+
     TilePiece[] path;
     List<Vector3> tilePiecePositions;
 
@@ -31,7 +33,9 @@ public class Unit01 : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        lineRenderer = GetComponent<LineRenderer>();
+
+        lineRenderer = gameObject.transform.Find("UI").Find("path_render").GetComponent<LineRenderer>();
+        //lineRenderer = GetComponent<LineRenderer>();
         tilePiecePositions = new List<Vector3>();
 
         currentTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
@@ -39,7 +43,7 @@ public class Unit01 : MonoBehaviour {
 
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
 
-        PathRequestManagerSmoothed.RequestPath(currentTile, requestedTile, onPathFound);
+        PathRequestManager.RequestPath(currentTile, requestedTile, onPathFound);
        
 
     }
@@ -82,28 +86,32 @@ public class Unit01 : MonoBehaviour {
  
 
         while (true) {
+            currentCoord = path[targetIndex];
             if (transform.position == currentWaypoint.transform.position + height) {
                 targetIndex++;
-                moving = 0.0f;
+                moving = 0.0f; // used for animation
 
                 if (targetIndex >= path.Length) {
                     Array.Reverse(path);
                     targetIndex = 0;
                     yield return new WaitForSeconds(3);
-
                 }
                 
                 currentWaypoint = path[targetIndex];
                 yield return StartCoroutine("Turn");
             }
 
-            moving = 1.0f;
+            moving = 1.0f; // used for animation
+
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.transform.position + height, speed * Time.deltaTime);
             transform.LookAt(currentWaypoint.transform.position + height);
+
             yield return null;
 
         }
     }
+ 
+
 
     IEnumerator Turn() {
         Vector3 directionToTarget = (path[targetIndex].transform.position - transform.position).normalized;
