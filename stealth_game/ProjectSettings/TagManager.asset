@@ -13,9 +13,9 @@ TagManager:
   - UI
   - Ground
   - TilePiece
-  - 
-  - 
-  - 
+  - Player_visible
+  - vision_blocker
+  - Player_Invisible
   - 
   - 
   - 
