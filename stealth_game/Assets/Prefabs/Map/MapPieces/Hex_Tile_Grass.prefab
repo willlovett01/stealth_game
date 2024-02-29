@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 604119276530444029}
   - component: {fileID: 1574444790700544514}
   m_Layer: 7
-  m_Name: Hex_Tile_Grass
+  m_Name: hex_tile_grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

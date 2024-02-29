@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7502492169040729190}
   - component: {fileID: 1610384095678475302}
   m_Layer: 7
-  m_Name: Hex_Tile_Long_Grass
+  m_Name: hex_tile_long_grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

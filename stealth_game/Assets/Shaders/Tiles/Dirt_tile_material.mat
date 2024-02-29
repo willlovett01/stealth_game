@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dirt_tile_material
+  m_Name: dirt_tile_material
   m_Shader: {fileID: -6465566751694194690, guid: 2a75f54c683857547ba9c2d1a324fe3d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

@@ -7,6 +7,7 @@ public class PlayerPositionMarker : MonoBehaviour {
 
     public Camera gameCamera;
     public LayerMask layerMask;
+    
 
     // Start is called before the first frame update
     void Start() {

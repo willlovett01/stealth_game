@@ -147,7 +147,6 @@ public class MapGeneratorHex : MonoBehaviour {
         foreach (TilePiece tile in allTiles) {
             tile.neighbours = GetNeighbours(tile, allTiles);
         }
-        print(allTiles.Count);
     }
 
     // generate noise

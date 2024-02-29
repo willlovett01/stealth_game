@@ -26,7 +26,7 @@ public class enemyPanelsGenerate : MonoBehaviour {
         GameObject newPanel = Instantiate(enemyPanel);
         newPanel.transform.parent = transform;
         newPanel.GetComponent<RectTransform>().localPosition = new Vector3(50 ,640 - (80 * enemyIndex), 0);
-        newPanel.GetComponent<enemy_panel>().enemy = enemy.gameObject;
+        newPanel.GetComponent<EnemyPanel>().enemy = enemy.gameObject;
 
         newPanel.transform.Find("Enemy_name").GetComponent<TextMeshProUGUI>().text = enemy.name;
     }

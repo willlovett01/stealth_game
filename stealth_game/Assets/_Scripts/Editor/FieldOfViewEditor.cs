@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Unit_01_FieldOfView))]
+[CustomEditor(typeof(Unit01FieldOfView))]
 public class FieldOfViewEditor : Editor {
 
     private void OnSceneGUI() {
-        Unit_01_FieldOfView fov = (Unit_01_FieldOfView)target;
+        Unit01FieldOfView fov = (Unit01FieldOfView)target;
 
         // draw radius circle in editor
         Handles.color = Color.white;

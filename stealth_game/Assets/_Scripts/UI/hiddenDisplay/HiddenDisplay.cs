@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class HiddenDisplay : MonoBehaviour {
 
-    Player_visibility playerVisibility;
+    PlayerVisibility playerVisibility;
     TextMeshProUGUI text;
 
     // Start is called before the first frame update
     void Start() {
-        playerVisibility = GameObject.Find("Player").GetComponent<Player_visibility>();
+        playerVisibility = GameObject.Find("Player_main").GetComponent<PlayerVisibility>();
         text = transform.Find("Hidden_display_text_UI").GetComponent<TextMeshProUGUI>();
     }
 
