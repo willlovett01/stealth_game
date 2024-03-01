@@ -5,18 +5,18 @@ using UnityEngine;
 public class Unit01Animator : MonoBehaviour {
 
     Animator animator;
-    Unit01Movement unit;
+    Unit01StateMachine unit;
     public float blendTime;
 
     // Start is called before the first frame update
     void Start() {
-        unit = GetComponent<Unit01Movement>();
+        unit = GetComponent<Unit01StateMachine>();
         animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
     void Update() {
-        float isMoving = unit.moving;
+        float isMoving = unit.Moving;
         animator.SetFloat("idle_switch", isMoving, blendTime, Time.deltaTime);
         
     }

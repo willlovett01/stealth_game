@@ -370,7 +370,7 @@ Shader "Env/Grass"
 
 				float4 shadowCoord = GetShadowCoord(vertexInput);
 				half shadowAttenuation = saturate(MainLightRealtimeShadow(shadowCoord) + 0.25f);
-				float4 shadowColor = lerp(0.5f, 1.0f, shadowAttenuation);
+				float4 shadowColor = lerp(0.2f, 1.0f, shadowAttenuation);
 				color *= shadowColor;
 			#endif
 

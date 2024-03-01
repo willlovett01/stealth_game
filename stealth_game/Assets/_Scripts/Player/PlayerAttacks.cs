@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerAttacks : MonoBehaviour {
 
@@ -18,14 +19,21 @@ public class PlayerAttacks : MonoBehaviour {
     public GameObject rangedAttackPrefab;
     bool rangedAttackOnCooldown;
     GameObject rangedAttackRadiusIndicator;
+    GameObject rangedAttackRadiusArrow;
+
     GameObject targetObject;
 
     // Start is called before the first frame update
     void Start() {
 
         mouseOverObject = GameObject.Find("Currently_selected_object").GetComponent<currentSelectedObject>();
+
         rangedAttackRadiusIndicator = GameObject.Find("attack_ranged_radius_marker");
+        rangedAttackRadiusArrow = GameObject.Find("attack_ranged_radius_arrow_marker");
+
         rangedAttackRadiusIndicator.SetActive(false);
+        rangedAttackRadiusArrow.SetActive(false);
+
         targetObject = mouseOverObject.currentMouseOverObject;
 
         bombAttackOnCooldown = false;
@@ -36,13 +44,38 @@ public class PlayerAttacks : MonoBehaviour {
     void Update() {
 
         // ranged attack
+        targetObject = mouseOverObject.currentMouseOverObject;
+        if (targetObject != null) {
+            float arrowAngle = Vector3.Angle(transform.position, targetObject.transform.position);
+        }
 
         // show and hide range indicator when key w is held down
         if (Input.GetKey(KeyCode.W)) {
+            
+            // enable UI for ranged attack
             rangedAttackRadiusIndicator.SetActive(true);
+            rangedAttackRadiusArrow.SetActive(true);
+
+            // rotate arrow UI to face target tile
+            rangedAttackRadiusArrow.transform.LookAt(targetObject.transform);
+            rangedAttackRadiusArrow.transform.eulerAngles += 180 * Vector3.up;
+
+            // set color of position marker
+            if (targetObject != null) {
+                if (Vector3.Distance(transform.position, targetObject.transform.position) < rangedAttackRadius) {
+                    GameObject.Find("Player_position_marker").GetComponent<Renderer>().material.SetInt("_player_attack_range_selected", 1);
+                } else {
+                    GameObject.Find("Player_position_marker").GetComponent<Renderer>().material.SetInt("_player_attack_range_selected", 0);
+                    GameObject.Find("Player_position_marker").GetComponent<Renderer>().material.SetInt("_walkable", 0);
+                }
+
+
+            }
+
+            // instantiate attack at selected tile if its within radius
             if (Input.GetMouseButtonDown(0)) {
                 targetObject = mouseOverObject.currentMouseOverObject;
-                print("test");
+                
                 if (targetObject != null) {
 
                     if (Vector3.Distance(transform.position, targetObject.transform.position) < rangedAttackRadius) {
@@ -51,9 +84,13 @@ public class PlayerAttacks : MonoBehaviour {
                 }
             }
         }
+            
 
+        // reset if w is released
         if (Input.GetKeyUp("w")) {
             rangedAttackRadiusIndicator.SetActive(false);
+            rangedAttackRadiusArrow.SetActive(false);
+            GameObject.Find("Player_position_marker").GetComponent<Renderer>().material.SetInt("_player_attack_range_selected", 0);
         }
                 
 
@@ -94,6 +131,7 @@ public class PlayerAttacks : MonoBehaviour {
         }
     }
 }
+
 
 
 

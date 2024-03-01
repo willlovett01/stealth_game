@@ -22,9 +22,9 @@ public class currentSelectedObject : MonoBehaviour {
     void Update() {
 
         getMouseOverObject();
-        //if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0)) {
             getSelectedObject();
-        //}
+        }
     }
 
     public void setSelectedObject(GameObject selectedObject) {

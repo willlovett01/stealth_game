@@ -138,7 +138,7 @@ public class MapGeneratorHex : MonoBehaviour {
             treePosition.gameObject.GetComponent<TilePiece>().IsClickable();
 
             // instantiate tree
-            Transform newTree = Instantiate(treePrefab[0], treePosition.position, Quaternion.identity);
+            Transform newTree = Instantiate(treePrefab[Random.Range(0,treePrefab.Length)], treePosition.position, Quaternion.identity);
             newTree.Rotate(new Vector3(0, Random.Range(0, 360), 0), Space.Self);
             newTree.parent = mapHolder;
         }

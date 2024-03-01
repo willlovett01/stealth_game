@@ -23,10 +23,12 @@ public class PlayerVisibility : MonoBehaviour {
             if (currentTile.tileType != "long_grass") {
                 hidden = false;
                 gameObject.layer = 8;
+                GameObject.Find("Player_model").layer = 8;
             }
             else {
                 hidden = true;
                 gameObject.layer = 0;
+                GameObject.Find("Player_model").layer = 0;
             }
         }
     }
