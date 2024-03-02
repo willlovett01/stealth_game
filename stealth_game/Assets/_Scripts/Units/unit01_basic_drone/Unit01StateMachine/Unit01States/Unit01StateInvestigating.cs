@@ -52,7 +52,7 @@ public class Unit01StateInvestigating : Unit01BaseState {
         ctx.TargetIndex = 0;
         Vector3 height = new Vector3(0, ctx.transform.position.y, 0);
 
-        while (ctx.currentCoord != ctx.FirstTile) {
+        
             while (true) {
                 ctx.currentCoord = ctx.Path[ctx.TargetIndex];
                 if (ctx.transform.position == currentWaypoint.transform.position + height) {
@@ -61,6 +61,11 @@ public class Unit01StateInvestigating : Unit01BaseState {
 
                     if (ctx.TargetIndex >= ctx.Path.Length) {
                         // add some search logic here
+                        if(ctx.currentCoord == ctx.FirstTile) {
+                            SwitchState(ctx.States.Patrolling());
+                            yield break;
+                        }
+
                         yield return ctx.StartCoroutine(Search());
                         // start new path from current position to first position of original patrol, then will start patrolling again
                         PathRequestManager.RequestPath(ctx.RequestedTile, ctx.FirstTile, onPathFound);
@@ -78,10 +83,9 @@ public class Unit01StateInvestigating : Unit01BaseState {
                 ctx.transform.LookAt(currentWaypoint.transform.position + height);
 
                 yield return null;
-            }
+            
         }
-        SwitchState(ctx.States.Patrolling());
-        yield break;
+
     }
 
     // coroutine to turn to face next waypoint

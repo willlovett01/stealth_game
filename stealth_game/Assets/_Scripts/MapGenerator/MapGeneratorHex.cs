@@ -10,7 +10,11 @@ public class MapGeneratorHex : MonoBehaviour {
     //map pieces 
     public Transform[] tilePrefab;
     public Transform[] treePrefab;
+    public Transform[] propPrefab;
+
     public int treeCount;
+    public int propCount;
+
     public int treeSeed;
 
     // map controls
@@ -131,6 +135,7 @@ public class MapGeneratorHex : MonoBehaviour {
         // shuffle list of all ground tiles to randomly select some for trees
         for (int i = 0; i < treeCount; i++) {
             TilePiece randomTile = GetRandomTile();
+            
             randomTile.GetComponent<TilePiece>().tileType = "tree";
             Transform treePosition = randomTile.gameObject.transform;
 
@@ -141,6 +146,22 @@ public class MapGeneratorHex : MonoBehaviour {
             Transform newTree = Instantiate(treePrefab[Random.Range(0,treePrefab.Length)], treePosition.position, Quaternion.identity);
             newTree.Rotate(new Vector3(0, Random.Range(0, 360), 0), Space.Self);
             newTree.parent = mapHolder;
+        }
+
+        // add props
+        // shuffle list of all ground tiles to randomly select some for props
+        for (int i = 0; i < propCount; i++) {
+            TilePiece randomTile = GetRandomTile();
+            randomTile.GetComponent<TilePiece>().tileType = "tree";
+            Transform propPosition = randomTile.gameObject.transform;
+
+            // make tree tiles non clickable
+            propPosition.gameObject.GetComponent<TilePiece>().IsClickable();
+
+            // instantiate tree
+            Transform newProp = Instantiate(propPrefab[Random.Range(0, propPrefab.Length)], propPosition.position, Quaternion.identity);
+            newProp.Rotate(new Vector3(0, Random.Range(0, 360), 0), Space.Self);
+            newProp.parent = mapHolder;
         }
 
         // add neigbours 
