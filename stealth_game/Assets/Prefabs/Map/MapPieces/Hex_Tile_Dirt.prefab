@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: f5ef26fd164901c4e9d15656608908a0, type: 2}
     - target: {fileID: 919132149155446097, guid: 22098cb6c58712441bc97b12b1b16f61, type: 3}
       propertyPath: m_Name
-      value: Hex_tile_dirt
+      value: hex_tile_dirt
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 22098cb6c58712441bc97b12b1b16f61, type: 3}
       propertyPath: m_Layer
@@ -117,4 +117,4 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 3065556405952602016, guid: 22098cb6c58712441bc97b12b1b16f61, type: 3}
+  m_Mesh: {fileID: -8813311755407999578, guid: 22098cb6c58712441bc97b12b1b16f61, type: 3}

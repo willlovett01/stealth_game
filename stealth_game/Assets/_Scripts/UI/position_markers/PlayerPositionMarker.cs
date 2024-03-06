@@ -21,7 +21,10 @@ public class PlayerPositionMarker : MonoBehaviour {
         Ray ray = gameCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, layerMask)) {
             gameObject.GetComponent<MeshRenderer>().enabled = true;
+
+            // move selection indicator to curser
             transform.position = hit.collider.transform.position;
+
             if (hit.collider.GetComponent<TilePiece>() != null) {
                 GetComponent<MeshRenderer>().material.SetInt("_walkable", Convert.ToInt32(hit.collider.GetComponent<TilePiece>().clickable));
             }
@@ -34,3 +37,5 @@ public class PlayerPositionMarker : MonoBehaviour {
 
 
             
+
+

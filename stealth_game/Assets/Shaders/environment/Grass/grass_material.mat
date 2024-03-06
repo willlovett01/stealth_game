@@ -95,8 +95,8 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _BendDelta: 1
-    - _BladeBendCurve: 3.813
+    - _BendDelta: 0.339
+    - _BladeBendCurve: 4
     - _BladeBendDistance: 0.38
     - _BladeHeightMax: 0.211
     - _BladeHeightMin: 0.13
@@ -118,7 +118,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GrassFalloff: 0
+    - _GrassFalloff: 0.0745
     - _GrassThreshold: -0.1
     - _Metallic: 0
     - _OcclusionStrength: 1
@@ -131,7 +131,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TessellationGrassDistance: 0.031
+    - _TessellationGrassDistance: 0.032
     - _WindFrequency: 0.021
     - _WorkflowMode: 1
     - _ZWrite: 1
