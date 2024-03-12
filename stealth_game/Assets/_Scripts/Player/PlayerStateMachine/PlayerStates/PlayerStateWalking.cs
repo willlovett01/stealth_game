@@ -109,9 +109,9 @@ public class PlayerStateWalking : PlayerStateBase {
 
     // check if control key is pressed 
     void CheckForSneaking() {
-        if (Input.GetKey(KeyCode.LeftControl)) {
-            ctx.Speed = 3;
-            ctx.PlayerNoiseLevel = 3;
+        if (ctx.IsStealth) {
+            ctx.Speed = 5;
+            ctx.PlayerNoiseLevel = 1;
         }
         
         else {

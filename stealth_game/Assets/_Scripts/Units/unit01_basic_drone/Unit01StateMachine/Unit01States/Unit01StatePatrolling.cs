@@ -10,22 +10,35 @@ public class Unit01StatePatrolling : Unit01BaseState {
     public Unit01StatePatrolling(Unit01StateMachine currentContext, Unit01StateFactory unit01StateFactory)
     : base(currentContext, unit01StateFactory) {}
 
+    // coroutines
     IEnumerator followPath;
+    IEnumerator turn;
 
     public override void EnterState() {
 
+        // assign coroutines
+        turn = Turn();
         followPath = FollowPath();
+        
 
         PathRequestManager.RequestPath(ctx.FirstTile, ctx.LastTile, onPathFound);
-
-        
     }
 
-    public override void UpdateState() {}
+        
+    public override void UpdateState() {
+        // check if heard sound
+        if (ctx.HearSound == true) {
+            SwitchState(factory.Investigating());
+        }
+    }
+
+
 
     public override void ExitState() {
+
+        // hard stop coroutines
         ctx.StopCoroutine(followPath);
-        Debug.Log("end_patrolling");
+        ctx.StopCoroutine(turn);
     }
 
     public override void CheckSwitchStates() {}
@@ -36,6 +49,11 @@ public class Unit01StatePatrolling : Unit01BaseState {
     // generate list of tiles in a path from current to requested tiles
     public void onPathFound(TilePiece[] Path, bool pathSuccessfull) {
         if (pathSuccessfull) {
+
+            // reassign to reset coroutine back to begining
+            followPath = FollowPath();
+            turn = Turn();
+
             ctx.Path = Path;
             ctx.TilePiecePositions = new List<Vector3>();
 
@@ -47,10 +65,10 @@ public class Unit01StatePatrolling : Unit01BaseState {
             ctx.LineRenderer.positionCount = ctx.TilePiecePositions.Count;
             ctx.LineRenderer.SetPositions(ctx.TilePiecePositions.ToArray());
 
-            ctx.StopCoroutine(followPath);
             ctx.StartCoroutine(followPath);
         }
     }
+
 
     // coroutine to follow path
     IEnumerator FollowPath() {
@@ -60,6 +78,7 @@ public class Unit01StatePatrolling : Unit01BaseState {
         Vector3 height = new Vector3(0, ctx.transform.position.y, 0);
 
         while (true) {
+            
             ctx.currentCoord = ctx.Path[ctx.TargetIndex];
             if (ctx.transform.position == currentWaypoint.transform.position + height) {
                 ctx.TargetIndex++;
@@ -72,7 +91,8 @@ public class Unit01StatePatrolling : Unit01BaseState {
                 }
 
                 currentWaypoint = ctx.Path[ctx.TargetIndex];
-                yield return ctx.StartCoroutine(Turn());
+                yield return ctx.StartCoroutine(turn);
+                turn = Turn();
                 yield return null;
             }
 

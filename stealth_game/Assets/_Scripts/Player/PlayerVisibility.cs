@@ -7,12 +7,18 @@ public class PlayerVisibility : MonoBehaviour {
     TilePiece currentTile;
 
     public bool hidden;
+    public LayerMask enemyMask;
+
 
     // Start is called before the first frame update
     void Start() {
-        StartCoroutine("CheckIfHidden");
+        StartCoroutine(CheckIfHidden());
+        //StartCoroutine(CheckInRangeWithDelay());
     }
 
+    void Update() {
+        CheckInRangeOfNoise();
+    }
 
     IEnumerator CheckIfHidden() {
         while (true) {
@@ -32,5 +38,25 @@ public class PlayerVisibility : MonoBehaviour {
             }
         }
     }
+
+    void CheckInRangeOfNoise() {
+        float noiseRange = gameObject.GetComponent<PlayerStateMachine>().PlayerNoiseLevel / 2f + 1f;
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, noiseRange, enemyMask);
+
+        // run enemy death method on all enemies within range
+        foreach (Collider enemy in targetsInViewRadius) {
+            IMakeSound enemyInRange = enemy.GetComponent<IMakeSound>();
+            if (enemyInRange != null) {
+                Debug.DrawLine(transform.position, enemy.gameObject.transform.position);
+                enemyInRange.MakeSound(gameObject.GetComponent<PlayerStateMachine>().CurrentTile);
+            }
+        }
+    }
 }
-            
+
+
+
+
+
+
+

@@ -29,6 +29,8 @@ public class PlayerStateMachine : MonoBehaviour {
 
     // player controls
     bool isMoveRequested = false;
+    [SerializeField]
+    bool isStealth = true;
 
     // for path finding
     TilePiece requestedTile;
@@ -54,8 +56,8 @@ public class PlayerStateMachine : MonoBehaviour {
 
     public TilePiece CurrentTile { get { return currentTile; } set { currentTile = value; } }
     
-
     public bool IsMoveRequested { get { return isMoveRequested; } set { isMoveRequested = value; } }
+    public bool IsStealth { get { return isStealth; } set { isStealth = value; } }
 
     public TilePiece RequestedTile { get { return requestedTile; } set { requestedTile = value; } }
     public TilePiece[] Path { get { return path; } set { path = value; } }
@@ -86,7 +88,10 @@ public class PlayerStateMachine : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+
+        // check inputs
         CheckMouseClick();
+        CheckForCtrlToggle();
 
         // update current state
         currentState.UpdateState();
@@ -111,7 +116,19 @@ public class PlayerStateMachine : MonoBehaviour {
             }
         }
     }
+
+    void CheckForCtrlToggle() {
+        if (Input.GetKeyDown(KeyCode.LeftControl)) { 
+            if (!isStealth) {
+                isStealth = true;
+            }
+            else {
+                isStealth = false;
+            }
+        }
+    }
 }
+
 
 
                       

@@ -19,6 +19,7 @@ public class PlayerStateIdle : PlayerStateBase {
     public override void ExitState() { }
 
     public override void CheckSwitchState() { 
+
     // check if player movement has been requested
     if(ctx.IsMoveRequested == true) {
             SwitchState(factory.Walking());
@@ -28,8 +29,8 @@ public class PlayerStateIdle : PlayerStateBase {
     public override void InitialiseSubState() { }
 
     void CheckForSneaking() {
-        if (Input.GetKey(KeyCode.LeftControl)) {
-            ctx.PlayerNoiseLevel = 1;
+        if (ctx.IsStealth) {
+            ctx.PlayerNoiseLevel = 0;
         }
 
         else { 

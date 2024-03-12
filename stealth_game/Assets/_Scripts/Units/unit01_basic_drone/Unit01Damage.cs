@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit01Detection : MonoBehaviour, IDamageable {
+public class Unit01Damage : MonoBehaviour, IDamageable {
 
     float health;
     public float deathRadius = 8;
@@ -20,11 +20,13 @@ public class Unit01Detection : MonoBehaviour, IDamageable {
             // run enemy death method on all enemies within range
             foreach (Collider enemy in targetsInViewRadius) {
 
-                gameObject.SetActive(false);
-                IEnemyDeath otherEnemy = enemy.gameObject.GetComponent<IEnemyDeath>();
-                if (otherEnemy != null) {
-                    otherEnemy.EnemyDeath(gameObject.GetComponent<Unit01StateMachine>().currentCoord);
+                //gameObject.SetActive(false);
+                if (enemy != gameObject.GetComponent<Collider>()) {
+                    IEnemyDeath otherEnemy = enemy.gameObject.GetComponent<IEnemyDeath>();
+                    if (otherEnemy != null) {
+                        otherEnemy.EnemyDeath(gameObject.GetComponent<Unit01StateMachine>().currentCoord);
 
+                    }
                 }
             }
             gameObject.SetActive(false);

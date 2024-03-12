@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer.Internal.Converters;
 using UnityEngine;
 
-public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
+public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
 {
     public float speed = 2.5f;
     public int waitTime;
@@ -12,23 +11,30 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
 
     GameObject pathFinder;
     GameObject map;
-    public GameObject currentlySelectedObject;
+    GameObject currentlySelectedObject;
 
     LineRenderer lineRenderer;
     GameObject investigatingVisualiser;
 
+    [SerializeField]
     TilePiece currentTile;
+    [SerializeField]
     TilePiece requestedTile;
     TilePiece firstTile;
     TilePiece lastTile;
 
     public TilePiece currentCoord;
 
+    [SerializeField]
     TilePiece[] path;
     List<Vector3> tilePiecePositions;
 
+    [SerializeField]
     int targetIndex;
     float moving;
+    [SerializeField]
+    bool isInvestigating;
+    bool hearSound;
 
     //state variables 
     Unit01BaseState currentState;
@@ -46,6 +52,8 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
 
     public int TargetIndex { get { return targetIndex; } set { targetIndex = value; } }
     public float Moving { get { return moving; } set { moving = value; } }
+    public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
+    public bool HearSound { get { return hearSound; } set { hearSound = value; } }
 
     public LineRenderer LineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
     public GameObject InvestigatingVisualiser { get { return investigatingVisualiser; } set { investigatingVisualiser = value; } }
@@ -56,6 +64,7 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
 
     void Awake() {
         // set references
+        currentlySelectedObject = GameObject.Find("Currently_selected_object");
         pathFinder = GameObject.Find("A*");
         map = GameObject.Find("MapHex");
     }
@@ -90,6 +99,8 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
     }
 
     private void Update() {
+        // update current state
+        currentState.UpdateState();
 
         // set line visibility if object is selected
         if (currentlySelectedObject.GetComponent<currentSelectedObject>().currentObject == gameObject) {
@@ -102,20 +113,35 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
 
     // based off enemy death interface, will run when enemy within certain range dies
     public void EnemyDeath(TilePiece deathLocation) {
+            // exit current state
+            currentState.ExitState();
+
+            // set tile of other enemies death to requested tile so other enemies go to investigate there
+            requestedTile = deathLocation;
+
+            // enter into investigation state
+            hearSound = true;
+    }
         
-        // exit current state
-        currentState.ExitState();
+       
 
-        // set tile of other enemies death to requested tile so other enemies go to investigate there
-        requestedTile = deathLocation;
+    // if enemy hears a sound
+    public void MakeSound(TilePiece soundLocation) {
+        if (isInvestigating == false) {
+            // exit current state
+            currentState.ExitState();
 
-        // enter into investigation state
+            // set tile of sound to requested tile 
+            requestedTile = soundLocation;
 
-        currentState = states.Investigating();
-        currentState.EnterState();
-        
+            // enter into investigation state
+            hearSound = true;
+        }
     }
 }
+
+
+
 
 
     
