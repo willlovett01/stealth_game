@@ -1,4 +1,3 @@
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +26,7 @@ public class PlayerMovement : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
 
-        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer = GameObject.Find("Path_render").GetComponent<LineRenderer>();
         tilePiecePositions = new List<Vector3>();
         currentTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);

@@ -47,7 +47,7 @@ public class Unit01VisionMarker : MonoBehaviour {
      Vector3 GetUnitPosition() {
         Transform unit = transform.parent.parent;
 
-        TilePiece currentTile = unit.GetComponent<Unit01Movement>().currentCoord.GetComponent<TilePiece>();
+        TilePiece currentTile = unit.GetComponent<Unit01StateMachine>().currentCoord.GetComponent<TilePiece>();
         TilePiece facingTile = new TilePiece();
 
         // adding to angle to fix rounding errors

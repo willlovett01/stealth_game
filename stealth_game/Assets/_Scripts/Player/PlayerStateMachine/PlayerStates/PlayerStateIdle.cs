@@ -1,0 +1,41 @@
+using UnityEngine;
+
+
+
+public class PlayerStateIdle : PlayerStateBase {
+
+    public PlayerStateIdle(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
+    : base(currentContext, playerStateFactory) { }
+
+    public override void EnterState() {
+        ctx.PlayerNoiseLevel = 3;
+    }
+
+    public override void UpdateState() {
+        CheckSwitchState();
+        CheckForSneaking();
+    }
+
+    public override void ExitState() { }
+
+    public override void CheckSwitchState() { 
+    // check if player movement has been requested
+    if(ctx.IsMoveRequested == true) {
+            SwitchState(factory.Walking());
+        }
+    }
+
+    public override void InitialiseSubState() { }
+
+    void CheckForSneaking() {
+        if (Input.GetKey(KeyCode.LeftControl)) {
+            ctx.PlayerNoiseLevel = 1;
+        }
+
+        else { 
+            ctx.PlayerNoiseLevel = 3;
+        }
+    }
+}
+
+

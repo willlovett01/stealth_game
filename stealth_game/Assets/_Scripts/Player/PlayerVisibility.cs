@@ -19,7 +19,7 @@ public class PlayerVisibility : MonoBehaviour {
 
             yield return new WaitForSeconds(0.2f);
 
-            currentTile = GetComponent<PlayerMovement>().currentTile;
+            currentTile = GetComponent<PlayerStateMachine>().CurrentTile;
             if (currentTile.tileType != "long_grass") {
                 hidden = false;
                 gameObject.layer = 8;

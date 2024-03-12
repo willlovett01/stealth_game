@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit01ColllisionDetection : MonoBehaviour, IDamageable {
+public class Unit01Detection : MonoBehaviour, IDamageable {
 
     float health;
     public float deathRadius = 8;
     public LayerMask enemyMask;
 
+    // when an enemy takes a hit from players attack
     public void TakeHit(float damage) {
         health -= damage;
 
@@ -24,7 +25,6 @@ public class Unit01ColllisionDetection : MonoBehaviour, IDamageable {
                 if (otherEnemy != null) {
                     otherEnemy.EnemyDeath(gameObject.GetComponent<Unit01StateMachine>().currentCoord);
 
-                    
                 }
             }
             gameObject.SetActive(false);
@@ -32,3 +32,4 @@ public class Unit01ColllisionDetection : MonoBehaviour, IDamageable {
         }
     }
 }
+                    

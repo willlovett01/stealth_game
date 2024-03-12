@@ -10,8 +10,8 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
     public int waitTime;
     public float turnSpeed;
 
-    public GameObject pathFinder;
-    public GameObject map;
+    GameObject pathFinder;
+    GameObject map;
     public GameObject currentlySelectedObject;
 
     LineRenderer lineRenderer;
@@ -54,10 +54,13 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
 
 
 
-
+    void Awake() {
+        // set references
+        pathFinder = GameObject.Find("A*");
+        map = GameObject.Find("MapHex");
+    }
 
     void Start() {
-
 
         // renders display of patrol path
         lineRenderer = gameObject.transform.Find("UI").Find("Path_render").GetComponent<LineRenderer>();
@@ -114,7 +117,11 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath
     }
 }
 
+
     
+
+
+
         
 
 

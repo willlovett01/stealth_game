@@ -13,7 +13,6 @@ public class Unit01StatePatrolling : Unit01BaseState {
     IEnumerator followPath;
 
     public override void EnterState() {
-        Debug.Log("patrolling");
 
         followPath = FollowPath();
 
