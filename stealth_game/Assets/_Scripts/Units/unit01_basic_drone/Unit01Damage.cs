@@ -15,23 +15,23 @@ public class Unit01Damage : MonoBehaviour, IDamageable {
         if (health <= 0) {
             
             // create array of other enemies within a certain range
-            Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, deathRadius, enemyMask);
+            Collider[] enemiesInSoundRadius = Physics.OverlapSphere(transform.position, deathRadius, enemyMask);
 
             // run enemy death method on all enemies within range
-            foreach (Collider enemy in targetsInViewRadius) {
-
-                //gameObject.SetActive(false);
-                if (enemy != gameObject.GetComponent<Collider>()) {
-                    IEnemyDeath otherEnemy = enemy.gameObject.GetComponent<IEnemyDeath>();
+            foreach (Collider enemy in enemiesInSoundRadius) {
+                    IMakeSound otherEnemy = enemy.gameObject.GetComponent<IMakeSound>();
                     if (otherEnemy != null) {
-                        otherEnemy.EnemyDeath(gameObject.GetComponent<Unit01StateMachine>().currentCoord);
+                        otherEnemy.MakeSound(gameObject.GetComponent<Unit01StateMachine>().currentCoord);
 
                     }
-                }
             }
             gameObject.SetActive(false);
-
         }
     }
 }
                     
+
+                
+                
+
+

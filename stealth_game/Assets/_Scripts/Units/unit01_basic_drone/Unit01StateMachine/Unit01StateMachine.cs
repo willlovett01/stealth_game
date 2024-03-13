@@ -3,34 +3,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
+public class Unit01StateMachine : MonoBehaviour, IMakeSound
 {
     public float speed = 2.5f;
     public int waitTime;
     public float turnSpeed;
 
+    [SerializeField]
     GameObject pathFinder;
+    [SerializeField]
     GameObject map;
+    [SerializeField]
     GameObject currentlySelectedObject;
+    public GameObject player;
 
+    // weapons
+    public Unit01Gun gun;
+
+    // displays
+    [SerializeField]
     LineRenderer lineRenderer;
+    [SerializeField]
     GameObject investigatingVisualiser;
+    [SerializeField]
+    GameObject chasingVisualiser;
 
+    // tiles
     [SerializeField]
     TilePiece currentTile;
     [SerializeField]
     TilePiece requestedTile;
     TilePiece firstTile;
     TilePiece lastTile;
+    TilePiece playerTile;
 
     public TilePiece currentCoord;
+
+    [SerializeField]
+    int targetIndex;
 
     [SerializeField]
     TilePiece[] path;
     List<Vector3> tilePiecePositions;
 
-    [SerializeField]
-    int targetIndex;
+    // unit attributes
+
     float moving;
     [SerializeField]
     bool isInvestigating;
@@ -46,10 +63,14 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
     public Unit01BaseState CurrentState { get { return currentState; } set { currentState = value; } }
     public Unit01StateFactory States { get { return states; } set { states = value; } }
 
+    public GameObject Player { get { return player; } set { player = value; } }
+    public Unit01Gun Gun { get { return gun; } set { gun = value; } }
+
     public TilePiece CurrentTile { get { return currentTile; } set { currentTile = value; } }
     public TilePiece RequestedTile { get { return requestedTile; } set { requestedTile = value; } }
     public TilePiece FirstTile { get { return firstTile; } set { firstTile = value; } }
     public TilePiece LastTile { get { return lastTile; } set { lastTile = value; } }
+    public TilePiece PlayerTile { get { return playerTile; } set { playerTile = value; } }
     public TilePiece[] Path { get { return path; } set { path = value; } }
 
     public int TargetIndex { get { return targetIndex; } set { targetIndex = value; } }
@@ -60,26 +81,19 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
 
     public LineRenderer LineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
     public GameObject InvestigatingVisualiser { get { return investigatingVisualiser; } set { investigatingVisualiser = value; } }
+    public GameObject ChasingVisualiser { get { return chasingVisualiser; } set { chasingVisualiser = value; } }
 
     public List<Vector3> TilePiecePositions { get { return tilePiecePositions; } set { tilePiecePositions = value; } }
 
 
 
-    void Awake() {
-        // set references
-        currentlySelectedObject = GameObject.Find("Currently_selected_object");
-        pathFinder = GameObject.Find("A*");
-        map = GameObject.Find("MapHex");
-    }
 
     void Start() {
 
-        // renders display of patrol path
-        lineRenderer = gameObject.transform.Find("UI").Find("Path_render").GetComponent<LineRenderer>();
-
         // displays if investigating
-        investigatingVisualiser = GameObject.Find("Investigating_visualiser");
+        
         investigatingVisualiser.SetActive(false);
+        chasingVisualiser.SetActive(false);
 
         // initialise empty list for tile piece positions, this list will be used to generate a path of tiles to walk along
         tilePiecePositions = new List<Vector3>();
@@ -110,21 +124,10 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
         if (currentlySelectedObject.GetComponent<currentSelectedObject>().currentObject == gameObject) {
             lineRenderer.enabled = true;
         }
+
         else {
             lineRenderer.enabled = false;
         }
-    }
-
-    // based off enemy death interface, will run when enemy within certain range dies
-    public void EnemyDeath(TilePiece deathLocation) {
-            // exit current state
-            currentState.ExitState();
-
-            // set tile of other enemies death to requested tile so other enemies go to investigate there
-            requestedTile = deathLocation;
-
-            // enter into investigation state
-            hearSound = true;
     }
         
     // if enemy hears a sound
@@ -145,10 +148,13 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
     }
 
     public void OnSeePlayer() {
-        //if (seePlayer == false) {
-        //    seePlayer = true;
-        //}
-        return;
+        if (seePlayer == false) {
+            seePlayer = true;
+        }
+    }
+
+    public void GetPlayerTile() {
+        playerTile = player.GetComponent<PlayerStateMachine>().CurrentTile;
     }
 
     // cooldown timer for hearing, starts when emeny hears a sound (prevents it triggering hearing constantly and bugging out)

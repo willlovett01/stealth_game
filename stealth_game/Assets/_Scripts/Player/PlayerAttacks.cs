@@ -8,6 +8,8 @@ public class PlayerAttacks : MonoBehaviour {
 
     currentSelectedObject mouseOverObject;
 
+    public LayerMask enemyMask;
+
     // bomb attack
     public float bombAttackCooldown;
     public GameObject bombAttackPrefab;
@@ -109,6 +111,22 @@ public class PlayerAttacks : MonoBehaviour {
 
             GameObject newBomb = Instantiate(bombAttackPrefab,new Vector3(transform.position.x, 0 , transform.position.z), Quaternion.identity);
             newBomb.transform.parent = GameObject.Find("Player_attack_bomb").transform;
+            
+
+            // BOMB SOUND (triggers enemies within a certain radius to hear it go off)
+            // create array of other enemies within a certain range
+            Collider[] enemiesInSoundRadius = Physics.OverlapSphere(transform.position, 4, enemyMask);
+
+            // run enemy death method on all enemies within range
+            foreach (Collider enemy in enemiesInSoundRadius) {
+                IMakeSound enemyInRange = enemy.GetComponent<IMakeSound>();
+                if (enemyInRange != null) {
+                    enemyInRange.MakeSound(gameObject.GetComponent<PlayerStateMachine>().CurrentTile);
+                }
+            }
+                    
+
+
             bombAttackOnCooldown = true;
             yield return new WaitForSeconds(bombAttackCooldown);
             bombAttackOnCooldown = false;
