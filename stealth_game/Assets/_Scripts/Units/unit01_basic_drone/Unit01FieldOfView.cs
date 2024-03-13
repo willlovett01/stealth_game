@@ -93,6 +93,7 @@ public class Unit01FieldOfView : MonoBehaviour {
                 if ( (!Physics.Raycast(transform.position, dirToTarget, distToTarget, visionBlocker))) {
                     visibleTargets.Add(target);
                     SetViewMeshColor(red);
+                    gameObject.GetComponent<Unit01StateMachine>().OnSeePlayer();
                 }
             }
         }

@@ -13,5 +13,9 @@ public class Unit01StateFactory {
     public Unit01BaseState Investigating() {
         return new Unit01StateInvestigating(context, this);
     }
+
+    public Unit01BaseState Chasing() {
+        return new Unit01StateChasing(context, this);
+    }
 }
 

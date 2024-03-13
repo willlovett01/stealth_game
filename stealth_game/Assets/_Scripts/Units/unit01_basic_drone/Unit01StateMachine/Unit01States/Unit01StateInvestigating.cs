@@ -31,7 +31,15 @@ public class Unit01StateInvestigating : Unit01BaseState {
         PathRequestManager.RequestPath(ctx.currentCoord, ctx.RequestedTile, onPathFound);
     }
 
-    public override void UpdateState() { }
+    public override void UpdateState() {
+        if (ctx.SeePlayer == true) {
+            SwitchState(factory.Chasing());
+        }
+
+        if (ctx.HearSound == true) {
+            SwitchState(factory.Investigating());
+        }
+    }
 
 
     public override void ExitState() {

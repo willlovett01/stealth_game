@@ -30,6 +30,9 @@ public class Unit01StatePatrolling : Unit01BaseState {
         if (ctx.HearSound == true) {
             SwitchState(factory.Investigating());
         }
+        if (ctx.SeePlayer == true) {
+            SwitchState(factory.Chasing());
+        }
     }
 
 

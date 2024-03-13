@@ -7,6 +7,8 @@ public class PlayerVisibility : MonoBehaviour {
     TilePiece currentTile;
 
     public bool hidden;
+    [SerializeField]
+    bool soundOnCountdown;
     public LayerMask enemyMask;
 
 
@@ -50,9 +52,12 @@ public class PlayerVisibility : MonoBehaviour {
                 Debug.DrawLine(transform.position, enemy.gameObject.transform.position);
                 enemyInRange.MakeSound(gameObject.GetComponent<PlayerStateMachine>().CurrentTile);
             }
+
         }
+        
     }
 }
+            
 
 
 

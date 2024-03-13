@@ -34,7 +34,9 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
     float moving;
     [SerializeField]
     bool isInvestigating;
+    bool seePlayer;
     bool hearSound;
+    bool hearingOnCooldown;
 
     //state variables 
     Unit01BaseState currentState;
@@ -54,6 +56,7 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
     public float Moving { get { return moving; } set { moving = value; } }
     public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
     public bool HearSound { get { return hearSound; } set { hearSound = value; } }
+    public bool SeePlayer { get { return seePlayer; } set { seePlayer = value; } }
 
     public LineRenderer LineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
     public GameObject InvestigatingVisualiser { get { return investigatingVisualiser; } set { investigatingVisualiser = value; } }
@@ -99,6 +102,7 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
     }
 
     private void Update() {
+
         // update current state
         currentState.UpdateState();
 
@@ -123,25 +127,48 @@ public class Unit01StateMachine : MonoBehaviour, IEnemyDeath, IMakeSound
             hearSound = true;
     }
         
-       
-
     // if enemy hears a sound
     public void MakeSound(TilePiece soundLocation) {
-        if (isInvestigating == false) {
+
+        if (!hearingOnCooldown) {
             // exit current state
-            currentState.ExitState();
+            //currentState.ExitState();
 
             // set tile of sound to requested tile 
             requestedTile = soundLocation;
 
             // enter into investigation state
             hearSound = true;
+            StartCoroutine(HearingCooldownTimer());
+
         }
+    }
+
+    public void OnSeePlayer() {
+        //if (seePlayer == false) {
+        //    seePlayer = true;
+        //}
+        return;
+    }
+
+    // cooldown timer for hearing, starts when emeny hears a sound (prevents it triggering hearing constantly and bugging out)
+    IEnumerator HearingCooldownTimer() {
+        hearingOnCooldown = true;
+        yield return new WaitForSeconds(4);
+        hearingOnCooldown = false;
     }
 }
 
 
+        
+        
 
+
+
+
+
+
+       
 
 
     
