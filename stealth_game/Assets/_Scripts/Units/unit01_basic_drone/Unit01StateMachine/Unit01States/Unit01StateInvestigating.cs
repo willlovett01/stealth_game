@@ -39,8 +39,11 @@ public class Unit01StateInvestigating : Unit01BaseState {
         if (ctx.HearSound == true) {
             SwitchState(factory.Investigating());
         }
-    }
 
+        if (ctx.Stunned == true) {
+            SwitchState(factory.Stunned());
+        }
+    }
 
     public override void ExitState() {
         ctx.IsInvestigating = false;
@@ -51,8 +54,6 @@ public class Unit01StateInvestigating : Unit01BaseState {
         ctx.StopCoroutine(turn);
         ctx.StopCoroutine(search);
     }
-
-
 
     public override void CheckSwitchStates() { }
 
@@ -100,7 +101,7 @@ public class Unit01StateInvestigating : Unit01BaseState {
                 if (ctx.TargetIndex >= ctx.Path.Length) {
                     
                     if (ctx.currentCoord == ctx.FirstTile) {
-                        SwitchState(ctx.States.Patrolling());
+                        SwitchState(factory.Patrolling());
                         yield break;
                     }
 
@@ -108,7 +109,7 @@ public class Unit01StateInvestigating : Unit01BaseState {
                     yield return ctx.StartCoroutine(search);
 
                     // start new path from current position to first position of original patrol, then will start patrolling again
-
+                    ctx.InvestigatingVisualiser.SetActive(false);
                     PathRequestManager.RequestPath(ctx.RequestedTile, ctx.FirstTile, onPathFound);
                     yield break;
                     
@@ -155,6 +156,7 @@ public class Unit01StateInvestigating : Unit01BaseState {
 
                     
         
+
 
 
 

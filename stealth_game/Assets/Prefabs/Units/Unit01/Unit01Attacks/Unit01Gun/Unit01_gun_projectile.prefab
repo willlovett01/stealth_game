@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5974244731065779075}
   - component: {fileID: 4585414841991366254}
   - component: {fileID: -5126819666929414828}
+  - component: {fileID: 6635687246216341872}
   m_Layer: 0
   m_Name: Unit01_gun_projectile
   m_TagString: Untagged
@@ -96,3 +97,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e310a3b46e8d3d244b3f6f9377f9bbd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerVisibleMask:
+    serializedVersion: 2
+    m_Bits: 256
+  playerInvisibleMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  playerHealth: {fileID: 0}
+--- !u!65 &6635687246216341872
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5923276151146495084}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Unit01Gun : MonoBehaviour {
 
     public Unit01Projectile projectile;
+    public PlayerHealth playerHealth;
     public float msBetweenShots = 100;
     public float muzzleVelocity = 35;
 
@@ -16,6 +17,7 @@ public class Unit01Gun : MonoBehaviour {
             nextShotTime = Time.time + msBetweenShots/1000;
             // instantiate new bullets
             Unit01Projectile newProjectile = Instantiate(projectile, transform.position, transform.rotation) as Unit01Projectile;
+            newProjectile.playerHealth = playerHealth;
 
             // set new bullet speed
             newProjectile.SetSpeed(muzzleVelocity);

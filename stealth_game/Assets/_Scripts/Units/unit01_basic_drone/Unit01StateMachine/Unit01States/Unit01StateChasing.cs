@@ -19,8 +19,6 @@ public class Unit01StateChasing : Unit01BaseState {
         // assign coroutines
         shooting = Shooting();
 
-        //MakeSound();
-
         // make red dot apear over enemies head
         ctx.ChasingVisualiser.SetActive(true);
 
@@ -34,9 +32,23 @@ public class Unit01StateChasing : Unit01BaseState {
     public override void UpdateState() { 
         playerPosition = ctx.Player.transform;
         ctx.Gun.Shoot();
+
+        if (ctx.Stunned == true) {
+            SwitchState(factory.Stunned());
+        }
     }
 
-    public override void ExitState() { }
+    public override void ExitState() { 
+
+        
+        ctx.ChasingVisualiser.SetActive(false);
+
+        ctx.StopCoroutine(shooting);
+        shooting = Shooting();
+        
+
+        
+    }
 
     public override void CheckSwitchStates() { }
 
@@ -65,18 +77,6 @@ public class Unit01StateChasing : Unit01BaseState {
             }
 
             yield return null;
-        }
-    }
-
-    void MakeSound() {
-        Collider[] enemiesInSoundRadius = Physics.OverlapSphere(ctx.transform.position, 4, LayerMask.GetMask("Enemy"));
-
-        // run enemy death method on all enemies within range
-        foreach (Collider enemy in enemiesInSoundRadius) {
-            IMakeSound enemyInRange = enemy.GetComponent<IMakeSound>();
-            if (enemyInRange != null) {
-                enemyInRange.MakeSound(ctx.CurrentTile);
-            }
         }
     }
 }

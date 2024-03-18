@@ -21,12 +21,10 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
     public Unit01Gun gun;
 
     // displays
-    [SerializeField]
     LineRenderer lineRenderer;
-    [SerializeField]
     GameObject investigatingVisualiser;
-    [SerializeField]
     GameObject chasingVisualiser;
+    GameObject visionConeVisualiser;
 
     // tiles
     [SerializeField]
@@ -51,9 +49,11 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
     float moving;
     [SerializeField]
     bool isInvestigating;
+    [SerializeField]
     bool seePlayer;
     bool hearSound;
     bool hearingOnCooldown;
+    bool stunned;
 
     //state variables 
     Unit01BaseState currentState;
@@ -78,20 +78,28 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
     public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
     public bool HearSound { get { return hearSound; } set { hearSound = value; } }
     public bool SeePlayer { get { return seePlayer; } set { seePlayer = value; } }
+    public bool Stunned { get { return stunned; } set { stunned = value; } }
 
     public LineRenderer LineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
     public GameObject InvestigatingVisualiser { get { return investigatingVisualiser; } set { investigatingVisualiser = value; } }
     public GameObject ChasingVisualiser { get { return chasingVisualiser; } set { chasingVisualiser = value; } }
+    public GameObject VisionConeVisualiser { get { return visionConeVisualiser; } set { visionConeVisualiser = value; } }
+
 
     public List<Vector3> TilePiecePositions { get { return tilePiecePositions; } set { tilePiecePositions = value; } }
 
+    void Awake() {
 
-
+        // assign references
+        visionConeVisualiser = transform.Find("UI/Unit_01_vision_visualiser").gameObject;
+        investigatingVisualiser = transform.Find("UI/Investigating_visualiser").gameObject;
+        chasingVisualiser = transform.Find("UI/Chasing_visualiser").gameObject;
+        LineRenderer = transform.Find("UI/Path_render").gameObject.GetComponent<LineRenderer>();
+    }
 
     void Start() {
 
         // displays if investigating
-        
         investigatingVisualiser.SetActive(false);
         chasingVisualiser.SetActive(false);
 
@@ -153,6 +161,7 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
         }
     }
 
+    // will get the current tile player is on, used in the chasing state to continuously aim at player
     public void GetPlayerTile() {
         playerTile = player.GetComponent<PlayerStateMachine>().CurrentTile;
     }

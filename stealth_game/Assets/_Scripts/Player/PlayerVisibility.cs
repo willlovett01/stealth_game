@@ -11,11 +11,14 @@ public class PlayerVisibility : MonoBehaviour {
     bool soundOnCountdown;
     public LayerMask enemyMask;
 
+    GameObject playerModel;
+
 
     // Start is called before the first frame update
     void Start() {
+   
         StartCoroutine(CheckIfHidden());
-        //StartCoroutine(CheckInRangeWithDelay());
+        playerModel = GameObject.Find("Player_model");
     }
 
     void Update() {
@@ -31,12 +34,12 @@ public class PlayerVisibility : MonoBehaviour {
             if (currentTile.tileType != "long_grass") {
                 hidden = false;
                 gameObject.layer = 8;
-                GameObject.Find("Player_model").layer = 8;
+                playerModel.layer = 8;
             }
             else {
                 hidden = true;
-                gameObject.layer = 0;
-                GameObject.Find("Player_model").layer = 0;
+                gameObject.layer = 10;
+                playerModel.layer = 10;
             }
         }
     }

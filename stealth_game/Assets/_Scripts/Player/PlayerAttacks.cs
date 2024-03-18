@@ -19,7 +19,6 @@ public class PlayerAttacks : MonoBehaviour {
     public float rangedAttackCooldown;
     public float rangedAttackRadius;
     public GameObject rangedAttackPrefab;
-    bool rangedAttackOnCooldown;
     GameObject rangedAttackRadiusIndicator;
     GameObject rangedAttackRadiusArrow;
 
@@ -29,12 +28,6 @@ public class PlayerAttacks : MonoBehaviour {
     void Start() {
 
         mouseOverObject = GameObject.Find("Currently_selected_object").GetComponent<currentSelectedObject>();
-
-        rangedAttackRadiusIndicator = GameObject.Find("attack_ranged_radius_marker");
-        rangedAttackRadiusArrow = GameObject.Find("attack_ranged_radius_arrow_marker");
-
-        rangedAttackRadiusIndicator.SetActive(false);
-        rangedAttackRadiusArrow.SetActive(false);
 
         targetObject = mouseOverObject.currentMouseOverObject;
 
@@ -130,20 +123,6 @@ public class PlayerAttacks : MonoBehaviour {
             bombAttackOnCooldown = true;
             yield return new WaitForSeconds(bombAttackCooldown);
             bombAttackOnCooldown = false;
-            yield break;
-
-        }
-    }
-
-    // trigger ranged attack
-    IEnumerator RangedAttack(GameObject target) {
-        while (true) {
-
-            GameObject newRanged = Instantiate(bombAttackPrefab, target.transform.position, Quaternion.identity);
-            newRanged.transform.parent = GameObject.Find("Player_attack_ranged").transform;
-            rangedAttackOnCooldown = true;
-            yield return new WaitForSeconds(rangedAttackCooldown);
-            rangedAttackOnCooldown = false;
             yield break;
 
         }

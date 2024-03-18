@@ -17,5 +17,9 @@ public class Unit01StateFactory {
     public Unit01BaseState Chasing() {
         return new Unit01StateChasing(context, this);
     }
+
+    public Unit01BaseState Stunned() {
+        return new Unit01StateStunned(context, this);
+    }
 }
 

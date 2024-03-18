@@ -13,7 +13,7 @@ public class Unit01Damage : MonoBehaviour, IDamageable {
         health -= damage;
 
         if (health <= 0) {
-            
+
             // create array of other enemies within a certain range
             Collider[] enemiesInSoundRadius = Physics.OverlapSphere(transform.position, deathRadius, enemyMask);
 
@@ -25,7 +25,8 @@ public class Unit01Damage : MonoBehaviour, IDamageable {
 
                     }
             }
-            gameObject.SetActive(false);
+            // set state to stunned
+            GetComponent<Unit01StateMachine>().Stunned = true;
         }
     }
 }
@@ -33,5 +34,7 @@ public class Unit01Damage : MonoBehaviour, IDamageable {
 
                 
                 
+            
+            
 
 

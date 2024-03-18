@@ -33,6 +33,9 @@ public class Unit01StatePatrolling : Unit01BaseState {
         if (ctx.SeePlayer == true) {
             SwitchState(factory.Chasing());
         }
+        if (ctx.Stunned == true) {
+            SwitchState(factory.Stunned());
+        }
     }
 
 

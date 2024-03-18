@@ -41,7 +41,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     // UI
     [SerializeField]
-    public LineRenderer lineRenderer;
+    LineRenderer lineRenderer;
 
     // getters and setters
     public Camera GameCamera { get { return gameCamera; } set { gameCamera = value; } }
