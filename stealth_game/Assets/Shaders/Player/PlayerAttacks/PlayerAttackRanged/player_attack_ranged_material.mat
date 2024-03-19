@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: player_attack_ranged_radius_material
-  m_Shader: {fileID: -6465566751694194690, guid: 704aefb425149e84abced3bbb713049c, type: 3}
+  m_Name: player_attack_ranged_material
+  m_Shader: {fileID: -6465566751694194690, guid: 769c33ba56808bf4092d75727f6709b2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -63,6 +63,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_08734ff4856b44e996cee8af2b774910_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 6f61ca7fc801931408f6df50e1bac4d4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -112,15 +116,16 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _player_attack_range_selected: 0
     - _walkable: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _main_color: {r: 0.34901965, g: 0.9607843, b: 0.71646094, a: 1}
+    - _main_color: {r: 1.3960786, g: 3.8431373, b: 2.712125, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &7848352744023597000
+--- !u!114 &5422669023933357903
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

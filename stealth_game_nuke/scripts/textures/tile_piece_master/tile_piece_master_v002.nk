@@ -1,0 +1,853 @@
+#! C:/Program Files/Nuke14.0v4/nuke-14.0.4.dll -nx
+version 14.0 v4
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="5118" h="1368" screen="0">
+        <splitter orientation="1">
+            <split size="2406"/>
+            <splitter orientation="2">
+                <split size="1030"/>
+                <dock id="" activePageId="Viewer.1" focus="true">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="296"/>
+                <dock id="" activePageId="DopeSheet.1">
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="2708" stretch="1"/>
+            <splitter orientation="1">
+                <split size="706"/>
+                <splitter orientation="2">
+                    <split size="700"/>
+                    <splitter orientation="1">
+                        <split size="43"/>
+                        <dock id="" activePageId="Toolbar.1">
+                            <page id="Toolbar.1"/>
+                        </dock>
+                        <split size="659"/>
+                        <dock id="" activePageId="Properties.1">
+                            <page id="Properties.1"/>
+                        </dock>
+                    </splitter>
+                    <split size="626"/>
+                    <dock id="" activePageId="uk.co.thefoundry.scripteditor.1">
+                        <page id="uk.co.thefoundry.scripteditor.1"/>
+                    </dock>
+                </splitter>
+                <split size="1998"/>
+                <dock id="" activePageId="DAG.1">
+                    <page id="DAG.1"/>
+                </dock>
+            </splitter>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name D:/unity/projects/stealth_game/stealth_game_nuke/scripts/textures/tile_piece_master/tile_piece_master_v002.nk
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement Nuke
+ workingSpaceLUT linear
+ monitorLut sRGB
+ monitorOutLUT rec709
+ int8Lut sRGB
+ int16Lut sRGB
+ logLut Cineon
+ floatLut linear
+}
+Read {
+ inputs 0
+ file_type png
+ file D:/unity/projects/stealth_game/stealth_game_nuke/input_files/textures/tile_pieces/tile_piece_watercolour_base_001.png
+ format "960 538 0 0 960 538 1 "
+ origset true
+ auto_alpha true
+ name Read1
+ xpos -1046
+ ypos 31
+}
+Reformat {
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ resize height
+ name Reformat3
+ xpos -1046
+ ypos 115
+}
+Blur {
+ channels rgba
+ size 37
+ name Blur1
+ xpos -1046
+ ypos 151
+ disable true
+}
+Keyer {
+ invert true
+ operation "luminance key"
+ range {0.369712886 1 1 1}
+ name Keyer1
+ xpos -1046
+ ypos 175
+}
+Premult {
+ name Premult1
+ xpos -1046
+ ypos 211
+}
+Dot {
+ name Dot1
+ xpos -1012
+ ypos 269
+}
+Reformat {
+ inputs 0
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ name Reformat2
+ xpos -596
+ ypos 7
+}
+set Nfd688c00 [stack 0]
+Noise {
+ size 740
+ zoffset 4.1
+ octaves 5
+ lacunarity 1.6
+ gain 0.495
+ gamma 1
+ center {1024 778}
+ color {0.02955682762 0.09305894375 0.0742135644 1}
+ name Noise2
+ xpos -596
+ ypos 117
+}
+Grade {
+ multiply 4
+ name Grade2
+ xpos -596
+ ypos 141
+}
+push $Nfd688c00
+Noise {
+ size 740
+ octaves 5
+ gain 0.495
+ gamma 1
+ center {1024 778}
+ color {0.09989872575 0.287440747 0.08437620103 1}
+ name Noise1
+ xpos -596
+ ypos 43
+}
+Grade {
+ multiply 3.35
+ name Grade4
+ xpos -596
+ ypos 67
+}
+Constant {
+ inputs 0
+ channels rgb
+ color {0.6251497269 0.6966038942 0.1112524122 0}
+ name Constant1
+ xpos -791
+ ypos -65
+}
+Reformat {
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ name Reformat1
+ xpos -791
+ ypos 7
+}
+Crop {
+ box {0 0 2048 2048}
+ name Crop1
+ xpos -791
+ ypos 43
+}
+Merge2 {
+ inputs 2
+ operation plus
+ bbox B
+ name Merge1
+ xpos -791
+ ypos 100
+}
+Merge2 {
+ inputs 2
+ bbox B
+ name Merge2
+ xpos -791
+ ypos 164
+}
+Merge2 {
+ inputs 2
+ bbox B
+ mix 0.875
+ name Merge3
+ xpos -791
+ ypos 266
+}
+set N236c7c00 [stack 0]
+Grade {
+ multiply 0.48
+ name Grade5
+ xpos -75
+ ypos 429
+}
+HueShift {
+ color_saturation 0.91
+ hue_rotation -180
+ name HueShift2
+ xpos -75
+ ypos 453
+}
+Saturation {
+ saturation 0
+ name Saturation1
+ xpos -75
+ ypos 477
+}
+Grade {
+ multiply 1.84
+ name Grade26
+ xpos -75
+ ypos 501
+}
+Write {
+ file D:/unity/projects/stealth_game/stealth_game/Assets/Shaders/Tiles/TilesTextures/Tiles_long_grass_color.jpg
+ file_type jpeg
+ _jpeg_quality 1
+ create_directories true
+ checkHashOnRead false
+ version 30
+ in_colorspace scene_linear
+ out_colorspace scene_linear
+ name Write3
+ xpos -75
+ ypos 920
+}
+Read {
+ inputs 0
+ file_type jpeg
+ file D:/unity/projects/stealth_game/stealth_game_nuke/input_files/textures/tile_pieces/noise_001.jpg
+ format "500 500 0 0 500 500 1 "
+ origset true
+ auto_alpha true
+ name Read5
+ xpos -975
+ ypos 418
+}
+Reformat {
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ name Reformat7
+ xpos -975
+ ypos 502
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+ name Shuffle3
+ xpos -975
+ ypos 538
+}
+set N2386a000 [stack 0]
+Grade {
+ gamma 0.46
+ name Grade14
+ xpos -975
+ ypos 667
+}
+Grade {
+ multiply {1.129999995 1.129999995 1.129999995 1}
+ name Grade15
+ xpos -975
+ ypos 691
+}
+Transform {
+ translate {-324 -640}
+ scale 1.623000026
+ center {1024 1024}
+ filter Simon
+ name Transform5
+ xpos -975
+ ypos 715
+}
+push $N2386a000
+Grade {
+ multiply {-0.01768000051 0.03400000185 0.02004640177 1}
+ name Grade16
+ xpos -975
+ ypos 562
+}
+Transform {
+ translate {-586 -344}
+ scale 1.623000026
+ center {1024 1024}
+ filter Simon
+ name Transform6
+ xpos -975
+ ypos 587
+}
+push $N236c7c00
+HueShift {
+ hue_rotation -22
+ name HueShift1
+ xpos -791
+ ypos 381
+}
+Grade {
+ multiply {0.5299999714 0.3750809729 0.3338999748 0.5299999714}
+ name Grade1
+ xpos -791
+ ypos 405
+}
+Grade {
+ multiply 2.28
+ name Grade3
+ xpos -791
+ ypos 429
+}
+Merge2 {
+ inputs 2
+ bbox B
+ mix 0.38
+ name Merge8
+ xpos -791
+ ypos 587
+}
+Merge2 {
+ inputs 2
+ bbox B
+ mix 0.16
+ name Merge9
+ xpos -791
+ ypos 715
+}
+Write {
+ file D:/unity/projects/stealth_game/stealth_game/Assets/Shaders/Tiles/TilesTextures/Tiles_dirt_color.jpg
+ file_type jpeg
+ _jpeg_quality 1
+ create_directories true
+ checkHashOnRead false
+ version 16
+ in_colorspace scene_linear
+ out_colorspace scene_linear
+ name Write2
+ xpos -791
+ ypos 1200
+}
+Read {
+ inputs 0
+ file_type jpeg
+ file D:/unity/projects/stealth_game/stealth_game_nuke/input_files/textures/tile_pieces/noise_001.jpg
+ format "500 500 0 0 500 500 1 "
+ origset true
+ auto_alpha true
+ name Read3
+ xpos -1371
+ ypos 441
+}
+Reformat {
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ name Reformat4
+ xpos -1371
+ ypos 525
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+ name Shuffle1
+ xpos -1371
+ ypos 561
+}
+set N238bd800 [stack 0]
+Grade {
+ gamma 0.46
+ name Grade10
+ xpos -1371
+ ypos 690
+}
+Grade {
+ multiply {1.440000057 1.059839964 0.4895998836 1}
+ name Grade9
+ xpos -1371
+ ypos 714
+}
+Transform {
+ translate {-324 -640}
+ scale 1.623000026
+ center {1024 1024}
+ filter Simon
+ name Transform2
+ xpos -1371
+ ypos 738
+}
+push $N238bd800
+Grade {
+ multiply {-0.1923999935 0.032559935 0.3700000048 1}
+ name Grade8
+ xpos -1371
+ ypos 585
+}
+Transform {
+ translate {-586 -344}
+ scale 1.623000026
+ center {1024 1024}
+ filter Simon
+ name Transform1
+ xpos -1371
+ ypos 610
+}
+push $N236c7c00
+HueCorrect {
+ hue {sat {}
+   lum {}
+   red {}
+   green {}
+   blue {curve 1 1 1.695024848 1.25174129 1 1 1}
+   r_sup {}
+   g_sup {}
+   b_sup {}
+   sat_thrsh {}}
+ name HueCorrect1
+ xpos -1235
+ ypos 549
+ disable true
+}
+Grade {
+ multiply {0.1161000058 0.2700000107 0.2330640107 0.2700000107}
+ mix 0.635
+ name Grade7
+ xpos -1235
+ ypos 580
+}
+Merge2 {
+ inputs 2
+ bbox B
+ mix 0.38
+ name Merge4
+ xpos -1235
+ ypos 610
+}
+Merge2 {
+ inputs 2
+ bbox B
+ mix 0.16
+ name Merge5
+ xpos -1235
+ ypos 738
+}
+Grade {
+ multiply 0.7
+ name Grade17
+ xpos -1235
+ ypos 762
+}
+Write {
+ file D:/unity/projects/stealth_game/stealth_game/Assets/Shaders/Tiles/TilesTextures/Tiles_short_grass_color.jpg
+ file_type jpeg
+ _jpeg_quality 1
+ checkHashOnRead false
+ version 15
+ in_colorspace scene_linear
+ out_colorspace scene_linear
+ name Write1
+ xpos -1235
+ ypos 1193
+}
+Read {
+ inputs 0
+ file_type png
+ file D:/unity/projects/stealth_game/stealth_game_reference/colour_palette/ghibli_landscape_001.png
+ format "1456 816 0 0 1456 816 1 "
+ origset true
+ name Read2
+ xpos 755
+ ypos 561
+}
+Roto {
+ inputs 0
+ output alpha
+ cliptype none
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097152}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Bezier3 512 bezier
+     {{cc
+       {f 8192}
+       {px 1
+        {0 0}
+        {x44c78004 x448cbffc}
+        {0 0}
+        {xc1400000 x42a00000}
+        {x44a47ffc x4454000a}
+        {x41400000 xc2a00000}
+        {xc30e0000 x42400000}
+        {x44b8fffc x44120000}
+        {x430e0040 xc2400000}
+        {xc1f00000 xc2cc0000}
+        {x44e78004 x440a8000}
+        {x41f00000 x42cc0000}
+        {x42080000 xc3300000}
+        {x44f44004 x4472000a}
+        {xc2080000 x432fffe0}}}
+      {cc
+       {f 8192}
+       {px 1
+        {0 0}
+        {xc2403b80 x437f84c0}
+        {0 0}
+        {xc1400000 x42a00000}
+        {xc3808ff0 xc21a3f80}
+        {x41400000 xc2a00000}
+        {xc30e0000 x42400000}
+        {xc2a68640 xc3764ed8}
+        {x430e0040 xc2400000}
+        {xc1effd00 xc2cc0000}
+        {x43796e00 xc292c20c}
+        {x41effe00 x42cc0000}
+        {x42080000 xc3300000}
+        {x437f4690 x42454900}
+        {xc207ff00 x432fffe0}}}}
+     {tx 1 x44ccf333 x444c0000}
+     {a osw x41200000 osf 0 str 1 spx x44800000 spy x44428000 sb 1 tt x40800000}}
+    {curvegroup Bezier2 512 bezier
+     {{cc
+       {f 8192}
+       {px 1
+        {0 0}
+        {x44068000 x44e38003}
+        {0 0}
+        {xc1400000 x41d00000}
+        {x43a40000 x44c1c003}
+        {x41400000 xc1d00100}
+        {xc2000000 xc0c00000}
+        {x440f0000 x44b07fff}
+        {x42000000 x40c00000}
+        {xc0c00000 xc2280000}
+        {x44600004 x44bb3fff}
+        {x40c00000 x42280080}
+        {x41400000 xc1400000}
+        {x44528004 x44d98003}
+        {xc1400000 x41400000}}}
+      {cc
+       {f 8192}
+       {px 1
+        {0 0}
+        {xc2188f70 x42ce5a20}
+        {0 0}
+        {xc1400000 x41d00040}
+        {xc2c7bff2 xc23863c0}
+        {x41400000 xc1d00100}
+        {xc2000000 xc0c00000}
+        {x41a23500 xc2d83ac0}
+        {x42000000 x40c00000}
+        {xc0c00000 xc2280000}
+        {x42d9ca18 xc178e000}
+        {x40c00000 x42280060}
+        {x41400000 xc1400000}
+        {x429b9180 x429b8ec0}
+        {xc1400000 x41400000}}}}
+     {tx 1 x441ecccd x44c88000}
+     {a osw x41200000 osf 0 str 1 spx x44800000 spy x44428000 sb 1 tt x40800000}}
+    {curvegroup Bezier1 512 bezier
+     {{cc
+       {f 8192}
+       {px 1
+        {xc03c0976 xc2672078}
+        {x42ec0000 x442d8000}
+        {x403c0918 x42672078}
+        {xc2653473 x40ffdb58}
+        {x43ae0000 x444c0004}
+        {x42653473 xc0ffdb48}
+        {xc23bc3b7 x4269d622}
+        {x44340000 x44188000}
+        {x423bc3bb xc269d620}
+        {x423d24f6 x4268b8c4}
+        {x44430000 x438b0000}
+        {xc23d24f4 xc268b8c6}
+        {x42bb5f8b xc26b7d81}
+        {x439c0000 x42d80000}
+        {xc2bb5f8d x426b7d7d}}}
+      {cc
+       {f 8192}
+       {px 1
+        {xc03c0976 xc2672078}
+        {xc333c487 x41124000}
+        {x403c0918 x42672078}
+        {xc2653473 x40ffdb58}
+        {x41c6fc00 x433245e0}
+        {x42653473 xc0ffdb48}
+        {xc23bc3b7 x4269d622}
+        {x430c5a40 x42e16660}
+        {x423bc3bb xc269d620}
+        {x423d24f6 x4268b8c4}
+        {x430baeb0 xc2e30f0c}
+        {xc23d24f4 xc268b8c6}
+        {x42bb5f8b xc26b7d81}
+        {xc2bf8acc xc318682e}
+        {xc2bb5f8d x426b7d7d}}}}
+     {tx 1 x43e3cccd x43fa999a}
+     {a osw x41200000 osf 0 str 1 spx x44800000 spy x44428000 sb 1 tt x40800000}}}}}}
+ toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1024 778}
+ colorOverlay {0 0 0 0}
+ lifetime_type "all frames"
+ motionblur_shutter_offset_type centred
+ source_black_outside true
+ name Roto1
+ xpos 655
+ ypos 820
+}
+Reformat {
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ resize height
+ name Reformat5
+ xpos 655
+ ypos 856
+ disable true
+}
+set N3be02800 [stack 0]
+Read {
+ inputs 0
+ file_type jpeg
+ file D:/unity/projects/stealth_game/stealth_game_nuke/input_files/textures/tile_pieces/lily_pads.jpg
+ format "800 600 0 0 800 600 1 "
+ origset true
+ auto_alpha true
+ name Read4
+ xpos 779
+ ypos 714
+}
+Reformat {
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ resize height
+ name Reformat9
+ xpos 779
+ ypos 798
+}
+Keyer {
+ operation "luminance key"
+ range {0.08348905331 0.3310585591 1 1}
+ name Keyer2
+ xpos 779
+ ypos 867
+}
+Tile {
+ rows 3
+ mirrorRows true
+ columns 3
+ mirrorCols true
+ name Tile1
+ xpos 779
+ ypos 903
+}
+set N32ec1c00 [stack 0]
+Merge2 {
+ inputs 2
+ operation mask
+ bbox B
+ name Merge7
+ xpos 655
+ ypos 951
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.alpha 0 3 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.red 0 0"
+ name Shuffle2
+ xpos 655
+ ypos 975
+}
+set N3be03000 [stack 0]
+push $N3be02800
+push $N32ec1c00
+Read {
+ inputs 0
+ file_type jpeg
+ file D:/unity/projects/stealth_game/stealth_game_nuke/input_files/textures/tile_pieces/noise_001.jpg
+ format "500 500 0 0 500 500 1 "
+ origset true
+ auto_alpha true
+ name Read6
+ xpos 409
+ ypos 469
+}
+Reformat {
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ name Reformat8
+ xpos 409
+ ypos 553
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+ name Shuffle4
+ xpos 409
+ ypos 589
+}
+set Nfd600c00 [stack 0]
+Grade {
+ gamma 0.46
+ name Grade19
+ xpos 409
+ ypos 718
+}
+Grade {
+ multiply {1.050336003 1.440000057 0.4895998836 1}
+ name Grade20
+ xpos 409
+ ypos 742
+}
+Transform {
+ translate {-324 -640}
+ scale 1.623000026
+ center {1024 1024}
+ filter Simon
+ name Transform7
+ xpos 409
+ ypos 766
+}
+push $Nfd600c00
+Grade {
+ multiply {-0.1923999935 0.3700000048 0.353128016 1}
+ name Grade21
+ xpos 409
+ ypos 613
+}
+Transform {
+ translate {-586 -344}
+ scale 1.623000026
+ center {1024 1024}
+ filter Simon
+ name Transform8
+ xpos 409
+ ypos 638
+}
+Noise {
+ inputs 0
+ octaves 3
+ center {1024 778}
+ name Noise3
+ xpos 648
+ ypos 436
+}
+push $N236c7c00
+Grade {
+ multiply 0.48
+ name Grade22
+ xpos 531
+ ypos 412
+}
+Grade {
+ inputs 1+1
+ multiply 2.35
+ name Grade23
+ xpos 531
+ ypos 436
+}
+Grade {
+ multiply {0.02999997139 0.3306999207 1 1}
+ mix 0.87
+ name Grade25
+ xpos 531
+ ypos 460
+}
+Merge2 {
+ inputs 2
+ bbox B
+ mix 0.38
+ name Merge10
+ xpos 531
+ ypos 638
+}
+Merge2 {
+ inputs 2
+ bbox B
+ mix 0.1
+ name Merge11
+ xpos 531
+ ypos 766
+}
+Grade {
+ multiply 0.7
+ name Grade24
+ xpos 531
+ ypos 790
+}
+Merge2 {
+ inputs 2+1
+ bbox B
+ name Merge6
+ xpos 531
+ ypos 909
+}
+set N32ec0000 [stack 0]
+Viewer {
+ inputs 2
+ frame 1
+ frame_range 1-100
+ colour_sample_bbox {0.0703125 0.15234375 0.0712890625 0.1533203125}
+ samplepoints {{0.6826171875 0.0615234375}
+   }
+ monitorOutOutputTransform rec709
+ name Viewer1
+ xpos -40
+ ypos -9
+}
+push $N32ec0000
+Write {
+ file D:/unity/projects/stealth_game/stealth_game/Assets/Shaders/Tiles/TilesTextures/Tiles_water_color.jpg
+ file_type jpeg
+ _jpeg_quality 1
+ create_directories true
+ checkHashOnRead false
+ version 19
+ name Write4
+ xpos 531
+ ypos 1191
+}
+push $N3be03000
+Write {
+ file D:/unity/projects/stealth_game/stealth_game/Assets/Shaders/Tiles/TilesTextures/Tiles_water_roughness.jpg
+ file_type jpeg
+ _jpeg_quality 1
+ create_directories true
+ checkHashOnRead false
+ version 22
+ name Write5
+ selected true
+ xpos 655
+ ypos 1189
+}
