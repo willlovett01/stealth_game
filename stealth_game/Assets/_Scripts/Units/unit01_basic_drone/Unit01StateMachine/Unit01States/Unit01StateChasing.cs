@@ -33,8 +33,13 @@ public class Unit01StateChasing : Unit01BaseState {
         playerPosition = ctx.Player.transform;
         ctx.Gun.Shoot();
 
-        if (ctx.Stunned == true) {
+        // state switches
+        if (ctx.IsStunned == true) {
             SwitchState(factory.Stunned());
+        }
+
+        if (ctx.IsDead == true) {
+            SwitchState(factory.Dead());
         }
     }
 

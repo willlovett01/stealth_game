@@ -15,12 +15,18 @@ public class Unit01StateStunned : Unit01BaseState {
 
         //hide vision cone
         ctx.VisionConeVisualiser.SetActive(false);
-        ctx.Moving = 0.0f; // used for animation
+        ctx.Moving = false; // used for animation
 
         ctx.StartCoroutine(stunned);
     }
 
-    public override void UpdateState() { }
+    public override void UpdateState() {
+
+        // state switches
+        if (ctx.IsDead == true) {
+            SwitchState(factory.Dead());
+        }
+    }
     
     public override void ExitState() {
 
@@ -38,9 +44,10 @@ public class Unit01StateStunned : Unit01BaseState {
 
     IEnumerator Stunned() {
 
-        ctx.Stunned = false;
         yield return new WaitForSeconds(8);
+        ctx.IsStunned = false;
         SwitchState(factory.Investigating());
+        
     }
 }
         

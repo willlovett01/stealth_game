@@ -21,5 +21,9 @@ public class Unit01StateFactory {
     public Unit01BaseState Stunned() {
         return new Unit01StateStunned(context, this);
     }
+
+    public Unit01BaseState Dead() {
+        return new Unit01StateDead(context, this);
+    }
 }
 

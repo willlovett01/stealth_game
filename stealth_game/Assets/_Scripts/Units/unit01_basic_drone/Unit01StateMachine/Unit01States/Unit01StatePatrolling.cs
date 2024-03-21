@@ -26,16 +26,20 @@ public class Unit01StatePatrolling : Unit01BaseState {
 
         
     public override void UpdateState() {
-        // check if heard sound
+        // state switches
         if (ctx.HearSound == true) {
             SwitchState(factory.Investigating());
         }
         if (ctx.SeePlayer == true) {
             SwitchState(factory.Chasing());
         }
-        if (ctx.Stunned == true) {
+        if (ctx.IsStunned == true) {
             SwitchState(factory.Stunned());
         }
+        if (ctx.IsDead == true) {
+            SwitchState(factory.Dead());
+        }
+
     }
 
 
@@ -88,10 +92,11 @@ public class Unit01StatePatrolling : Unit01BaseState {
             ctx.currentCoord = ctx.Path[ctx.TargetIndex];
             if (ctx.transform.position == currentWaypoint.transform.position + height) {
                 ctx.TargetIndex++;
-                ctx.Moving = 0.0f; // used for animation
+                
 
                 if (ctx.TargetIndex >= ctx.Path.Length) {
                     Array.Reverse(ctx.Path);
+                    ctx.Moving = false; // used for animation
                     ctx.TargetIndex = 0;
                     yield return new WaitForSeconds(3);
                 }
@@ -103,7 +108,7 @@ public class Unit01StatePatrolling : Unit01BaseState {
             }
 
             ctx.CurrentTile = currentWaypoint;
-            ctx.Moving = 1.0f; // used for animation
+            ctx.Moving = true; // used for animation
 
             ctx.transform.position = Vector3.MoveTowards(ctx.transform.position, currentWaypoint.transform.position + height, ctx.speed * Time.deltaTime);
             ctx.transform.LookAt(currentWaypoint.transform.position + height);

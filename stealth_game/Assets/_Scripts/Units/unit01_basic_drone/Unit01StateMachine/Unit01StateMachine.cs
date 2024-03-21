@@ -17,6 +17,7 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
     GameObject currentlySelectedObject;
     public GameObject player;
 
+
     // weapons
     public Unit01Gun gun;
 
@@ -45,15 +46,19 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
     List<Vector3> tilePiecePositions;
 
     // unit attributes
-
-    float moving;
+    [SerializeField]
+    bool moving;
     [SerializeField]
     bool isInvestigating;
     [SerializeField]
     bool seePlayer;
     bool hearSound;
     bool hearingOnCooldown;
-    bool stunned;
+    [SerializeField]
+    bool isStunned;
+    [SerializeField]
+    bool isDead;
+
 
     //state variables 
     Unit01BaseState currentState;
@@ -74,11 +79,12 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
     public TilePiece[] Path { get { return path; } set { path = value; } }
 
     public int TargetIndex { get { return targetIndex; } set { targetIndex = value; } }
-    public float Moving { get { return moving; } set { moving = value; } }
+    public bool Moving { get { return moving; } set { moving = value; } }
     public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
     public bool HearSound { get { return hearSound; } set { hearSound = value; } }
     public bool SeePlayer { get { return seePlayer; } set { seePlayer = value; } }
-    public bool Stunned { get { return stunned; } set { stunned = value; } }
+    public bool IsStunned { get { return isStunned; } set { isStunned = value; } }
+    public bool IsDead { get { return isDead; } set { isDead = value; } }
 
     public LineRenderer LineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
     public GameObject InvestigatingVisualiser { get { return investigatingVisualiser; } set { investigatingVisualiser = value; } }
@@ -142,8 +148,6 @@ public class Unit01StateMachine : MonoBehaviour, IMakeSound
     public void MakeSound(TilePiece soundLocation) {
 
         if (!hearingOnCooldown) {
-            // exit current state
-            //currentState.ExitState();
 
             // set tile of sound to requested tile 
             requestedTile = soundLocation;

@@ -16,6 +16,9 @@ public class Unit01FieldOfView : MonoBehaviour {
     [Range(0,360)]
     public float viewAngle;
     public float viewHeight;
+    float unitHeight = 1.2f;
+
+    Vector3 transformHeight;
 
     public float meshResolution;
     public int edgeResolveInterations;
@@ -34,12 +37,15 @@ public class Unit01FieldOfView : MonoBehaviour {
         viewMeshFilter.mesh = viewMesh;
         viewRenderer = viewMeshFilter.gameObject.GetComponent<MeshRenderer>();
 
+        
+
         SetViewMeshColor(yellow);
 
         StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
 
     void LateUpdate() {
+        transformHeight = new Vector3(transform.position.x, unitHeight, transform.position.z);
         DrawFieldOfView();
     }
 
@@ -81,16 +87,16 @@ public class Unit01FieldOfView : MonoBehaviour {
 
         SetViewMeshColor(yellow);
 
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, playerMask);
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transformHeight, viewRadius, playerMask);
 
         for (int i = 0; i < targetsInViewRadius.Length; i++) {
             Transform  target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
+            Vector3 dirToTarget = (target.position - transformHeight).normalized;
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2 ) {
-                float distToTarget = Vector3.Distance(transform.position, target.position);
+                float distToTarget = Vector3.Distance(transformHeight, target.position);
 
                 // check for vision blockers between us and target 
-                if ( (!Physics.Raycast(transform.position, dirToTarget, distToTarget, visionBlocker))) {
+                if ( (!Physics.Raycast(transformHeight, dirToTarget, distToTarget, visionBlocker))) {
                     visibleTargets.Add(target);
                     SetViewMeshColor(red);
                     gameObject.GetComponent<Unit01StateMachine>().OnSeePlayer();
@@ -112,7 +118,7 @@ public class Unit01FieldOfView : MonoBehaviour {
         for (int i = 0; i <= stepCount; i++) {
             float angle = transform.eulerAngles.y - viewAngle / 2 + (stepAngleSize * i);
             ViewCastInfo newViewCast = ViewCast(angle);
-            //Debug.DrawLine(transform.position, transform.position + DirFromAngle(angle, true) * viewRadius);
+            //Debug.DrawLine(transformHeight, transformHeight + DirFromAngle(angle, true) * viewRadius);
 
             if (i > 0) {
                 if (previousViewCast.hit != newViewCast.hit) {
@@ -134,7 +140,7 @@ public class Unit01FieldOfView : MonoBehaviour {
         Vector3[] vertices = new Vector3[vertexCount];
         int[] triangles = new int[(vertexCount - 2) * 3];
 
-        vertices[0] = Vector3.zero;
+        vertices[0] = Vector3.zero + new Vector3(0, unitHeight, 0);
         for(int i = 0; i < vertexCount - 1; i++) {
             vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
 
@@ -182,11 +188,11 @@ public class Unit01FieldOfView : MonoBehaviour {
         Vector3 dir = DirFromAngle(globalAngle, true);
         RaycastHit hit;
 
-        if(Physics.Raycast(transform.position, dir, out hit, viewRadius, visionBlocker)) {
+        if(Physics.Raycast(transformHeight, dir, out hit, viewRadius, visionBlocker)) {
             return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
         }
         else {
-            return new ViewCastInfo(false, transform.position + dir * viewRadius, viewRadius, globalAngle);
+            return new ViewCastInfo(false, transformHeight + dir * viewRadius, viewRadius, globalAngle);
         }
     }
 

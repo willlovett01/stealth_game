@@ -11,6 +11,8 @@ public class PlayerVisibility : MonoBehaviour {
     bool soundOnCountdown;
     public LayerMask enemyMask;
 
+    Vector3 positionHeight;
+
     GameObject playerModel;
 
 
@@ -22,6 +24,7 @@ public class PlayerVisibility : MonoBehaviour {
     }
 
     void Update() {
+        positionHeight = new Vector3 (transform.position.x, 1.2f, transform.position.z);
         CheckInRangeOfNoise();
     }
 
@@ -46,13 +49,13 @@ public class PlayerVisibility : MonoBehaviour {
 
     void CheckInRangeOfNoise() {
         float noiseRange = gameObject.GetComponent<PlayerStateMachine>().PlayerNoiseLevel / 2f + 1f;
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, noiseRange, enemyMask);
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(positionHeight, noiseRange, enemyMask);
 
         // run enemy death method on all enemies within range
         foreach (Collider enemy in targetsInViewRadius) {
-            IMakeSound enemyInRange = enemy.GetComponent<IMakeSound>();
+
+            IMakeSound enemyInRange = enemy.gameObject.transform.parent.parent.parent.parent.GetComponent<IMakeSound>();
             if (enemyInRange != null) {
-                Debug.DrawLine(transform.position, enemy.gameObject.transform.position);
                 enemyInRange.MakeSound(gameObject.GetComponent<PlayerStateMachine>().CurrentTile);
             }
 

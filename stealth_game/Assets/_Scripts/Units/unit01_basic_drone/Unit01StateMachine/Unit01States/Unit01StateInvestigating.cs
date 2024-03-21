@@ -32,6 +32,8 @@ public class Unit01StateInvestigating : Unit01BaseState {
     }
 
     public override void UpdateState() {
+
+        // state switches
         if (ctx.SeePlayer == true) {
             SwitchState(factory.Chasing());
         }
@@ -40,8 +42,12 @@ public class Unit01StateInvestigating : Unit01BaseState {
             SwitchState(factory.Investigating());
         }
 
-        if (ctx.Stunned == true) {
+        if (ctx.IsStunned == true) {
             SwitchState(factory.Stunned());
+        }
+
+        if (ctx.IsDead == true) {
+            SwitchState(factory.Dead());
         }
     }
 
@@ -96,11 +102,12 @@ public class Unit01StateInvestigating : Unit01BaseState {
             ctx.currentCoord = ctx.Path[ctx.TargetIndex];
             if (ctx.transform.position == currentWaypoint.transform.position + height) {
                 ctx.TargetIndex++;
-                ctx.Moving = 0.0f; // used for animation
+                
 
                 if (ctx.TargetIndex >= ctx.Path.Length) {
                     
                     if (ctx.currentCoord == ctx.FirstTile) {
+                        ctx.Moving = false; // used for animation
                         SwitchState(factory.Patrolling());
                         yield break;
                     }
@@ -121,7 +128,7 @@ public class Unit01StateInvestigating : Unit01BaseState {
                 yield return null;
             }
             ctx.CurrentTile = currentWaypoint;
-            ctx.Moving = 1.0f; // used for animation
+            ctx.Moving = true; // used for animation
 
             ctx.transform.position = Vector3.MoveTowards(ctx.transform.position, currentWaypoint.transform.position + height, ctx.speed * Time.deltaTime);
             //ctx.transform.LookAt(currentWaypoint.transform.position + height);

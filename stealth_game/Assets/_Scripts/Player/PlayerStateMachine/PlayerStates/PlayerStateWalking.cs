@@ -49,9 +49,9 @@ public class PlayerStateWalking : PlayerStateBase {
             }
 
             // update line visual
-            ctx.LineRenderer.enabled = true;
-            ctx.LineRenderer.positionCount = ctx.TilePiecePositions.Count;
-            ctx.LineRenderer.SetPositions(ctx.TilePiecePositions.ToArray());
+            //ctx.LineRenderer.enabled = true;
+            //ctx.LineRenderer.positionCount = ctx.TilePiecePositions.Count;
+            //ctx.LineRenderer.SetPositions(ctx.TilePiecePositions.ToArray());
 
             //ctx.StopCoroutine(followPath);
             ctx.StopCoroutine(followPath);

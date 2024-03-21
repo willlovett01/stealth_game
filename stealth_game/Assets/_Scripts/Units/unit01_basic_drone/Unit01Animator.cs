@@ -16,8 +16,33 @@ public class Unit01Animator : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        float isMoving = unit.Moving;
-        animator.SetFloat("idle_switch", isMoving, blendTime, Time.deltaTime);
-        
+        animationHandler();
+    }
+
+    void animationHandler() {
+
+        // check for movement
+        if (unit.Moving) {
+            animator.SetBool("isMoving", true);
+        }
+        else {
+            animator.SetBool("isMoving", false);
+        }
+
+        //check for stunned
+        if (unit.IsStunned) {
+            animator.SetBool("isStunned", true);
+        }
+        else {
+            animator.SetBool("isStunned", false);
+        }
+
+        //check for dead
+        if (unit.IsDead) {
+            animator.SetBool("isDead", true);
+        }
     }
 }
+
+        
+

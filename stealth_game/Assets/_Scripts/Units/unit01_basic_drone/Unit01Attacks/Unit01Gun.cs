@@ -16,7 +16,7 @@ public class Unit01Gun : MonoBehaviour {
         if (Time.time > nextShotTime) {
             nextShotTime = Time.time + msBetweenShots/1000;
             // instantiate new bullets
-            Unit01Projectile newProjectile = Instantiate(projectile, transform.position, transform.rotation) as Unit01Projectile;
+            Unit01Projectile newProjectile = Instantiate(projectile, transform.position + new Vector3(0,1.2f,0), transform.rotation) as Unit01Projectile;
             newProjectile.playerHealth = playerHealth;
 
             // set new bullet speed
