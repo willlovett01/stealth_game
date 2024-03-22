@@ -19,10 +19,21 @@ public class EnemyPanel : MonoBehaviour {
     // Update is called once per frame
     public void Update() {
         button.onClick.AddListener(OnButtonClick);
+
+        // only works for specific enemy type, will need to expand or rethink when i add more enemies
+        if (enemy.GetComponent<Unit01StateMachine>().IsDead ) {
+            OnEnemyDeath();
+        }
+        
     }
 
     public void OnButtonClick() {
         selectedObject.GetComponent<currentSelectedObject>().setSelectedObject(enemy);
+    }
+
+    // delete panel if corrisponding enemy dies
+    void OnEnemyDeath() {
+        Destroy(this.gameObject);
     }
 
 }

@@ -15,7 +15,4 @@ public class PlayerStateFactory {
         return new PlayerStateWalking(context, this);
     }
 
-    public PlayerStateBase Sneaking() {
-        return new PlayerStateSneaking(context, this);
-    }
 }

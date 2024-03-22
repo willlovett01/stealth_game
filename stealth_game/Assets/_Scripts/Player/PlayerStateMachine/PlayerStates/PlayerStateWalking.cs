@@ -14,7 +14,8 @@ public class PlayerStateWalking : PlayerStateBase {
     public override void EnterState() {
         // set walking speed
         ctx.Speed = 8;
-        ctx.PlayerNoiseLevel = 8f; 
+        ctx.PlayerNoiseLevel = 8f;
+        ctx.IsMoving = true;
 
         followPath = FollowPath();
 
@@ -28,7 +29,9 @@ public class PlayerStateWalking : PlayerStateBase {
         CheckForSneaking();
     }
 
-    public override void ExitState() { }
+    public override void ExitState() {
+        ctx.IsMoving = false;
+    }
 
     public override void CheckSwitchState() { }
 
@@ -80,7 +83,8 @@ public class PlayerStateWalking : PlayerStateBase {
             ctx.CurrentTile = currentWaypoint;
 
             ctx.transform.position = Vector3.MoveTowards(ctx.transform.position, currentWaypoint.transform.position + height, ctx.Speed * Time.deltaTime);
-            ctx.transform.LookAt(ctx.Path.Last().transform.position + height);
+            //ctx.transform.LookAt(ctx.Path.Last().transform.position + height);
+            ctx.transform.LookAt(currentWaypoint.transform.position + height);
             yield return null;
 
         }

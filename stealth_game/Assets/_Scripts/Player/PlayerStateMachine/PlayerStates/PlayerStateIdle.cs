@@ -9,6 +9,7 @@ public class PlayerStateIdle : PlayerStateBase {
 
     public override void EnterState() {
         ctx.PlayerNoiseLevel = 3;
+        ctx.IsMoving = false;
     }
 
     public override void UpdateState() {

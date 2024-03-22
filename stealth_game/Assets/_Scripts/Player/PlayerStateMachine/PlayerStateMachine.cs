@@ -31,6 +31,9 @@ public class PlayerStateMachine : MonoBehaviour {
     bool isMoveRequested = false;
     [SerializeField]
     bool isStealth = true;
+    [SerializeField]
+    bool isMoving;
+
 
     // for path finding
     TilePiece requestedTile;
@@ -58,6 +61,7 @@ public class PlayerStateMachine : MonoBehaviour {
     
     public bool IsMoveRequested { get { return isMoveRequested; } set { isMoveRequested = value; } }
     public bool IsStealth { get { return isStealth; } set { isStealth = value; } }
+    public bool IsMoving { get { return isMoving; } set { isMoving = value; } }
 
     public TilePiece RequestedTile { get { return requestedTile; } set { requestedTile = value; } }
     public TilePiece[] Path { get { return path; } set { path = value; } }
