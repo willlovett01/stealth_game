@@ -85,14 +85,14 @@ public class PlayerStateMachine : MonoBehaviour {
         currentState.EnterState();
 
         // setup random position
-        currentTile = map.GetComponent<MapGeneratorHex>().GetRandomTile();
+        currentTile = map.GetComponent<MapGeneratorHex>().GetRandomGrassTile();
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
 
     }
 
     // Update is called once per frame
     void Update() {
-
+         
         // check inputs
         CheckMouseClick();
         CheckForCtrlToggle();

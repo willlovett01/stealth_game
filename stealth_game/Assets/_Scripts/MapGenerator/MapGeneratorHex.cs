@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class MapGeneratorHex : MonoBehaviour {
 
@@ -29,7 +30,8 @@ public class MapGeneratorHex : MonoBehaviour {
 
     public List<TilePiece> allTiles;
     List<TilePiece> allGroundTiles;
-    Queue<TilePiece> allGroundTilePositionsShuffled;
+    public Queue<TilePiece> allGroundTilePositionsShuffled;
+    public List<TilePiece> allGrassTiles;
 
 
     List<Vector2Int> tileCoordinates;
@@ -127,8 +129,42 @@ public class MapGeneratorHex : MonoBehaviour {
                 allGroundTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
                 allGroundTilePositionsShuffled = new Queue<TilePiece>(Utility.ShuffleArray(allGroundTiles.ToArray(), treeSeed));
             }
+
+            // add to list of grass tiles for potential spawn locations of player
+            if (newTileType == "long_grass") {
+                allGrassTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
+            }
         }
-                
+
+        //add grass tiles
+        for (int i =0; i < 6; i++) {
+
+            // get random tile
+            TilePiece randomTile = GetRandomTile();
+
+            // replace tile with grass tile
+            Transform newTile = Instantiate(tilePrefab[0], randomTile.transform.position, Quaternion.identity) as Transform;
+
+            // add new tile to list of all tiles
+            allTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
+            allGroundTiles.Add(newTile.gameObject.GetComponent<TilePiece>());
+
+            newTile.localScale *= tileSize;
+            newTile.localScale *= (1 - outlinePercent);
+            newTile.parent = mapHolder;
+
+            newTile.gameObject.GetComponent<TilePiece>().cubeCoordinate = randomTile.cubeCoordinate;
+            newTile.gameObject.GetComponent<TilePiece>().offsetCoordinate = randomTile.offsetCoordinate;
+
+            // hide existing tile
+            randomTile.gameObject.GetComponent<Renderer>().enabled = false;
+            randomTile.gameObject.GetComponent<Collider>().enabled = false;
+
+            // add tile to queue of grass tiles to select from for player spawn position
+            allGrassTiles.Add(newTile.GetComponent<TilePiece>());
+
+        }
+
         // add trees
         // shuffle list of all ground tiles to randomly select some for trees
         for (int i = 0; i < treeCount; i++) {
@@ -184,6 +220,13 @@ public class MapGeneratorHex : MonoBehaviour {
         return randomTile;
     }
 
+    // get a random grass tile for player to spawn
+    public TilePiece GetRandomGrassTile() {
+        TilePiece randomeGrassTile = allGrassTiles[Random.Range(0, allGrassTiles.Count)];
+        return randomeGrassTile;
+    }
+    
+
     // get neighbours 
     public List<TilePiece> GetNeighbours(TilePiece tile, List<TilePiece> allTiles) {
 
@@ -214,6 +257,9 @@ public class MapGeneratorHex : MonoBehaviour {
     }
 
 }
+
+
+
 
 
 

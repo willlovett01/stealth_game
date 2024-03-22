@@ -23,7 +23,7 @@ public class ScoreCounter : MonoBehaviour {
 
     void resetScene () {
         string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentSceneName);
+        SceneManager.LoadScene("MainMenu");
     }
 }
 

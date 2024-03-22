@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Searcher;
 using UnityEngine;
 
 public class Unit01StateDead : Unit01BaseState {
