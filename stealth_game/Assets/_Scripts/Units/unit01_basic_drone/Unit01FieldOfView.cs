@@ -41,7 +41,8 @@ public class Unit01FieldOfView : MonoBehaviour {
 
         SetViewMeshColor(yellow);
 
-        StartCoroutine("FindTargetsWithDelay", 0.2f);
+        // coroutine with 1 second delay on vision to stop instances of enemy spotting player immedietly
+        StartCoroutine("SpawnInTimer");
     }
 
     void LateUpdate() {
@@ -208,6 +209,12 @@ public class Unit01FieldOfView : MonoBehaviour {
     void SetViewMeshColor(Color color) {
         viewRenderer.material.color = color;
         viewRenderer.material.SetColor("_EmissionColor", color);
+    }
+
+    // delay to start to make sure player is hidden
+    IEnumerator SpawnInTimer() {
+        yield return new WaitForSeconds(1);
+        StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
 }
 

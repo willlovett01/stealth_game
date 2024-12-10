@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class MapGeneratorHex : MonoBehaviour {
 
@@ -36,7 +35,7 @@ public class MapGeneratorHex : MonoBehaviour {
 
     List<Vector2Int> tileCoordinates;
 
-    void Awake() {
+    void OnEnable() {
 
         GenerateMap();
     }
@@ -48,6 +47,7 @@ public class MapGeneratorHex : MonoBehaviour {
         allGroundTiles = new List<TilePiece>();
         allTiles = new List<TilePiece>();
         tileCoordinates = new List<Vector2Int>();
+        allGrassTiles = new List<TilePiece>();
 
         // map radius coords
         List<Vector3> radialCoordinates = new List<Vector3>();
@@ -137,7 +137,7 @@ public class MapGeneratorHex : MonoBehaviour {
         }
 
         //add grass tiles
-        for (int i =0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
 
             // get random tile
             TilePiece randomTile = GetRandomTile();
@@ -162,6 +162,7 @@ public class MapGeneratorHex : MonoBehaviour {
 
             // add tile to queue of grass tiles to select from for player spawn position
             allGrassTiles.Add(newTile.GetComponent<TilePiece>());
+            //allGroundTilePositionsShuffled = new Queue<TilePiece>(Utility.ShuffleArray(allGroundTiles.ToArray(), treeSeed));
 
         }
 

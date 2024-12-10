@@ -71,6 +71,11 @@ public class PlayerStateMachine : MonoBehaviour {
     public LineRenderer LineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
 
 
+
+    private void OnEnable() {
+        isStealth = true;
+    }
+
     void Awake() {
 
         // assign reference variables
@@ -86,7 +91,10 @@ public class PlayerStateMachine : MonoBehaviour {
 
         // setup random position
         currentTile = map.GetComponent<MapGeneratorHex>().GetRandomGrassTile();
+        print(currentTile);
         transform.position = new Vector3(currentTile.gameObject.transform.position.x, transform.position.y, currentTile.gameObject.transform.position.z);
+
+
 
     }
 

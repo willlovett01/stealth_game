@@ -18,7 +18,8 @@ public class PlayerVisibility : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-   
+
+        hidden = true;
         StartCoroutine(CheckIfHidden());
         playerModel = GameObject.Find("Player_model");
     }
@@ -48,7 +49,7 @@ public class PlayerVisibility : MonoBehaviour {
     }
 
     void CheckInRangeOfNoise() {
-        float noiseRange = gameObject.GetComponent<PlayerStateMachine>().PlayerNoiseLevel / 2f + 1f;
+        float noiseRange = gameObject.GetComponent<PlayerStateMachine>().PlayerNoiseLevel / 2f;
         Collider[] targetsInViewRadius = Physics.OverlapSphere(positionHeight, noiseRange, enemyMask);
 
         // run enemy death method on all enemies within range

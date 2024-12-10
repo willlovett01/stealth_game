@@ -8,5 +8,6 @@ public class Level01LoadSettings : MonoBehaviour {
     //randomise map
     private void OnEnable() {
         mapGenerator.seed = Random.Range(-200,200);
+        mapGenerator.mapRadius = Random.Range(5, 7);
     }
 }
