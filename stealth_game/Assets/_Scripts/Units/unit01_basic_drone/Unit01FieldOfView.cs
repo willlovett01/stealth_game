@@ -9,6 +9,7 @@ public class Unit01FieldOfView : MonoBehaviour {
 
     public LayerMask playerMask;
     public LayerMask visionBlocker;
+    public bool isVisionVisible;
 
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
@@ -45,9 +46,12 @@ public class Unit01FieldOfView : MonoBehaviour {
         StartCoroutine("SpawnInTimer");
     }
 
+
     void LateUpdate() {
         transformHeight = new Vector3(transform.position.x, unitHeight, transform.position.z);
-        DrawFieldOfView();
+        if (isVisionVisible) {
+            DrawFieldOfView();
+        }
     }
 
     public struct ViewCastInfo {

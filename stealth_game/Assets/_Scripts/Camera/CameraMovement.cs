@@ -5,9 +5,15 @@ using UnityEngine.InputSystem;
 
 public class CameraMovement : MonoBehaviour {
 
-    public Transform player;
+
     public float rotateSpeed;
+    public Transform player;
     public XboxGamepadControls cameraControls;
+
+    [SerializeField]
+    bool cameraFollow;
+
+    Vector3 followObject;
 
     //controls
     InputAction rotateCamera;
@@ -23,26 +29,66 @@ public class CameraMovement : MonoBehaviour {
 
     private void OnDisable() {
         rotateCamera.Disable();
-    } 
+    }
 
     // Update is called once per frame
     void Update() {
 
-        // mouse and keyboard
-        if (Input.GetKey(KeyCode.A)) {
-            transform.RotateAround(Vector3.zero, Vector3.up, rotateSpeed * Time.deltaTime);
-            }
-        if (Input.GetKey(KeyCode.D)) {
-            transform.RotateAround(Vector3.zero, Vector3.up, -rotateSpeed * Time.deltaTime);
+
+        // check if camera is set to follow player or not
+        checkForCameraToggle();
+        if (cameraFollow) {
+            followObject = player.position;
+        }
+        else {
+            followObject = Vector3.zero;
         }
 
-        // controller
-        transform.RotateAround(Vector3.zero, Vector3.up, rotateSpeed * Time.deltaTime * rotateCamera.ReadValue<float>()); // triggers
-        transform.RotateAround(Vector3.zero, Vector3.up, rotateSpeed * Time.deltaTime * Input.GetAxis("Right Analog Stick (Horizontal)")); // right stick
 
+        // set camera position
+        transform.position = followObject;
+
+        // mouse and keyboard
+
+        // rotation
+        if (Input.GetKey(KeyCode.A)) {
+            transform.RotateAround(followObject, Vector3.up, rotateSpeed * Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.D)) {
+            transform.RotateAround(followObject, Vector3.up, -rotateSpeed * Time.deltaTime);
+        }
+
+        // angle
+        if (Input.GetKey(KeyCode.E)) {
+            if (transform.rotation.eulerAngles.x < 85) {
+                transform.Rotate(0.5f, 0, 0);
+            }
+        }
+        if (Input.GetKey(KeyCode.Q)) {
+            if (transform.rotation.eulerAngles.x > 15) {
+                transform.Rotate(-0.5f, 0, 0);
+            }
+        }
+
+        // check if follow player toggle is enbled. If so camera origin will be player, if not camera origin will be 0,0,0 
+        void checkForCameraToggle() {
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                if (!cameraFollow) {
+                    cameraFollow = true;
+                }
+                else {
+                    cameraFollow = false;
+                }
+            }
+        }
     }
 }
         
+                
+                
+
+
+
         
 
 

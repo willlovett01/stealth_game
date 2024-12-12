@@ -21,6 +21,6 @@ public class PlayerHealth : MonoBehaviour {
 
     void Death() {
         string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

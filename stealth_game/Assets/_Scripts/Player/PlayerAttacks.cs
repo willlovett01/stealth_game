@@ -8,11 +8,6 @@ public class PlayerAttacks : MonoBehaviour {
 
     public LayerMask enemyMask;
 
-    // bomb attack
-    public float bombAttackCooldown;
-    public GameObject bombAttackPrefab;
-    bool bombAttackOnCooldown;
-
     // ranged attack
     public float rangedAttackCooldown;
     public int rangedAttackAmmo;
@@ -23,14 +18,9 @@ public class PlayerAttacks : MonoBehaviour {
     // Update is called once per frame
     void Update() {      
 
-        // bomb attack
-        if (Input.GetKeyDown("q")) {
-            if (bombAttackOnCooldown == false) {
-                StartCoroutine("BombAttack");
-            }
-        }
 
-        // bomb attack
+
+        // arrow attack
         if (Input.GetKeyUp("w")) {
             if (rangedAttackOnCooldown == false) {
                 if (rangedAttackAmmo != 0) {
@@ -40,33 +30,6 @@ public class PlayerAttacks : MonoBehaviour {
         }
     }
 
-
-    // trigger bomb attack
-    IEnumerator BombAttack() {
-        
-        // instantiate bomb
-        GameObject newBomb = Instantiate(bombAttackPrefab,new Vector3(transform.position.x, 0 , transform.position.z), Quaternion.identity);
-        newBomb.transform.parent = GameObject.Find("Player_attack_bomb").transform;
-            
-
-        // BOMB SOUND (triggers enemies within a certain radius to hear it go off)
-        // create array of other enemies within a certain range
-        Collider[] enemiesInSoundRadius = Physics.OverlapSphere(transform.position, 4, enemyMask);
-
-        // run enemy death method on all enemies within range
-        foreach (Collider enemy in enemiesInSoundRadius) {
-            IMakeSound enemyInRange = enemy.GetComponent<IMakeSound>();
-            if (enemyInRange != null) {
-                enemyInRange.MakeSound(gameObject.GetComponent<PlayerStateMachine>().CurrentTile);
-            }
-        }
-             
-        // wait for cooldown
-        bombAttackOnCooldown = true;
-        yield return new WaitForSeconds(bombAttackCooldown);
-        bombAttackOnCooldown = false;
-        yield break;
-    }
 
     IEnumerator RangedAttack() {
 

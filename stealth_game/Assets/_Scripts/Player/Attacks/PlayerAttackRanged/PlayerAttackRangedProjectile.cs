@@ -7,7 +7,7 @@ public class PlayerAttackRangedProjectile : MonoBehaviour {
 
     float speed = 50;
     float distanceTraveled = 0;
-    float maxDistance = 15;
+    float maxDistance = 30;
     public LayerMask enemyLayerMask;
 
     void Update() {

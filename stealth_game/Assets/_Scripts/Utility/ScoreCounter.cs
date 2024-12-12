@@ -5,25 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class ScoreCounter : MonoBehaviour {
     int scoreLeft;
+    public LevelLoadSettings levelSettings;
+
 
     void Start() {
-        scoreLeft = 3;
+        scoreLeft = 1;
     }
 
     void Update() {
         if (scoreLeft <= 0) {
-            resetScene();
+            levelSettings.OnLevelWin();
         }
     }
 
     // reduce score by 1 when collectable collected
     public void ReduceScore() {
         scoreLeft -= 1;
-    }
-
-    void resetScene () {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene("MainMenu");
     }
 }
 

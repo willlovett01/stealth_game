@@ -70,7 +70,7 @@ public class MapGeneratorHex : MonoBehaviour {
             s.Add(i);
         }
 
-        // add positive numbers based off radius
+        // add negative numbers based off radius
         for (int i = 0; i >= -mapRadius; i--) {
             q.Add(i);
             r.Add(i);
@@ -190,10 +190,10 @@ public class MapGeneratorHex : MonoBehaviour {
             randomTile.GetComponent<TilePiece>().tileType = "tree";
             Transform propPosition = randomTile.gameObject.transform;
 
-            // make tree tiles non clickable
+            // make prop tiles non clickable
             propPosition.gameObject.GetComponent<TilePiece>().IsClickable();
 
-            // instantiate tree
+            // instantiate prop
             Transform newProp = Instantiate(propPrefab[Random.Range(0, propPrefab.Length)], propPosition.position, Quaternion.identity);
             newProp.Rotate(new Vector3(0, Random.Range(0, 360), 0), Space.Self);
             newProp.parent = mapHolder;
