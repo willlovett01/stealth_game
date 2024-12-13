@@ -8,6 +8,10 @@ public class LevelLoader : MonoBehaviour {
 
     public int level;
     public Text levelText;
+
+
+    // level generation settings
+    public string levelType;
     public static int levelMapRadius;
     public static float levelMapSeed;
 
@@ -19,10 +23,31 @@ public class LevelLoader : MonoBehaviour {
 
     public void OnOpenButtonClick() {
 
-        // set and store level paramaters. They are set here so they are stored until level number is changed (in case someone dies they can re-do the same seed)
-        levelMapSeed = Random.Range(-200, 200);
-        levelMapRadius = Random.Range(4, 7);
+        // load into level
+        loadLevel();
+    }
 
-        SceneManager.LoadScene("Level_01");
+
+    void loadLevel() {
+
+
+        // LEVEL GENERATION
+
+        // set and store level paramaters. They are set here so they are stored until level number is changed (in case someone dies they can re-do the same seed)
+        if (levelType != "shop") {
+            levelMapSeed = Random.Range(-200, 200);
+            levelMapRadius = Random.Range(4, 9);
+
+            SceneManager.LoadScene("Level_01");
+        }
+        // shop level settings
+        else if (levelType == "shop") {
+            levelMapSeed = -117;
+            levelMapRadius = 5;
+
+            SceneManager.LoadScene("Level_Shop");
+        }
     }
 }
+            
+
